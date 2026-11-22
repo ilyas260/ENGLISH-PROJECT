@@ -1,0 +1,102 @@
+    <section id="quizSection" class="py-2 hidden">
+      
+      <!-- Top Bar: Back Arrow, Theme Badge, Score -->
+      <div class="flex items-center justify-between mb-4">
+        <button id="btnBackToDashboard" class="w-10 h-10 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center text-slate-700 hover:text-blue-700 cursor-pointer">
+          <i class="fa-solid fa-chevron-left text-sm"></i>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <span id="quizLevelBadge" class="bg-blue-100 text-blue-800 text-xs font-black px-2.5 py-1 rounded-full border border-blue-200">
+            A1
+          </span>
+          <span id="quizThemeBadge" class="font-extrabold text-sm text-slate-900 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">
+            Theme Title
+          </span>
+        </div>
+
+        <!-- Score & Streak -->
+        <div class="flex items-center gap-1.5">
+          <div class="bg-blue-800 text-white font-mono font-bold text-xs px-2.5 py-1 rounded-full shadow-sm">
+            <span id="quizCurrentScore">0</span> PTS
+          </div>
+          <div id="quizStreakContainer" class="bg-rose-100 text-rose-700 font-bold text-xs px-2 py-1 rounded-full flex items-center gap-1">
+            <span>🔥</span><span id="quizStreakCount">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Progress Bar Line -->
+      <div class="w-full h-2.5 bg-white/70 rounded-full overflow-hidden p-0.5 border border-slate-200 mb-4 shadow-inner">
+        <div id="quizProgressBar" class="h-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-full transition-all duration-300" style="width: 5%;"></div>
+      </div>
+
+      <!-- London Big Ben & Red Bus Header Banner (Matching Screen 3 top banner) -->
+      <div class="rounded-3xl bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 p-5 sm:p-6 text-white shadow-lg relative overflow-hidden mb-5">
+        <div class="relative z-10 max-w-md">
+          <div class="inline-block bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider mb-2">
+            🇬🇧 English Masterclass
+          </div>
+          <h2 id="lessonBannerTitle" class="text-2xl sm:text-3xl font-black font-display leading-tight mb-1 text-white">
+            Present Simple
+          </h2>
+          <p id="lessonBannerSubtitle" class="text-xs sm:text-sm font-semibold text-blue-100 leading-relaxed">
+            We use it to talk about habits, routines and facts.
+          </p>
+        </div>
+
+        <!-- Speech Bubble "Let's Learn!" + Red Double Decker Bus emoji illustration -->
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 text-right hidden sm:block pointer-events-none">
+          <div class="inline-block bg-white text-blue-900 font-black text-xs px-3 py-1.5 rounded-2xl shadow-md -rotate-6 mb-2">
+            Let's Learn! 💬
+          </div>
+          <div class="text-6xl filter drop-shadow-md">
+            🚌
+          </div>
+        </div>
+      </div>
+
+      <!-- Examples Card (with yellow lightbulb 💡 matching Screen 3) -->
+      <div class="app-card rounded-2xl p-4 sm:p-5 mb-5 bg-amber-50/40 border border-amber-200/70">
+        <div class="flex items-center gap-2 mb-2.5">
+          <span class="text-xl">💡</span>
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-800">Quick Grammar Rule & Examples:</h4>
+        </div>
+        <div id="quizGrammarRule" class="text-xs sm:text-sm font-semibold text-slate-700 space-y-1 pl-6">
+          <p>• I <b>play</b> football.</p>
+          <p>• She <b>likes</b> English.</p>
+          <p>• They <b>live</b> in London.</p>
+        </div>
+      </div>
+
+      <!-- Practice Time! Question Card (with rocket 🚀 matching Screen 3) -->
+      <div id="questionCard" class="app-card rounded-3xl p-6 sm:p-8 shadow-card relative mb-6">
+        
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🚀</span>
+            <span id="questionTypeBadge" class="text-xs font-extrabold uppercase tracking-wider text-slate-900">Practice Time!</span>
+          </div>
+          <div class="text-xs font-bold text-slate-500 flex items-center gap-2 font-mono">
+            <span id="quizQuestionProgress">Question 1 of 20</span>
+            <span id="quizProgressPercent" class="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">5%</span>
+          </div>
+        </div>
+
+        <!-- Question Prompt (e.g. Complete the sentence: She _____ coffee every morning.) -->
+        <h3 id="questionPrompt" class="text-lg sm:text-xl font-black text-slate-900 leading-relaxed mb-6">
+          Loading question prompt...
+        </h3>
+
+        <!-- Dynamic Answer Area (Option pills or Input) -->
+        <div id="answerArea" class="space-y-4">
+          <!-- Populated dynamically -->
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- SCREEN 4: FINAL RECAP (Matching Screen 4) -->
+    <!-- ============================================================== -->

@@ -1,0 +1,63 @@
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-2.5 mb-6 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
+    <div class="max-w-5xl mx-auto flex items-center justify-between gap-3">
+      
+      <!-- Brand Logo & Name -->
+      <div id="btnGoHome" class="flex items-center gap-3 cursor-pointer group select-none">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-all">
+          <i class="fa-solid fa-graduation-cap text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-black font-display tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
+              English Learning
+            </h1>
+            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200/80 tracking-wide uppercase">
+              Pro
+            </span>
+          </div>
+          <p class="text-[11px] font-medium text-slate-500 hidden sm:block">Learn • Practice • Speak</p>
+        </div>
+      </div>
+
+      <!-- Controls & User Profile: revealed only for the signed-in account -->
+      <div id="userControls" class="flex items-center gap-2 sm:gap-2.5 hidden">
+        
+        <!-- Cloud Sync Status Pill -->
+        <div id="dbStatusPill" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200/70 text-emerald-700 text-xs font-medium cursor-pointer transition-all" title="Database Connection Status">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span id="dbStatusText" class="text-[11px] font-semibold text-emerald-800">Cloud Synced</span>
+        </div>
+
+        <!-- Sound FX Toggle -->
+        <button id="btnSoundToggle" class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-all shadow-xs" title="Toggle Sound FX">
+          <i id="soundIcon" class="fa-solid fa-volume-high text-xs"></i>
+        </button>
+
+        <!-- User Profile Pill -->
+        <div id="userProfilePill" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 transition-all cursor-pointer shadow-xs">
+          <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs">
+            <i class="fa-solid fa-user text-[11px]"></i>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span id="currentUserName" class="text-xs font-bold text-slate-800 max-w-[90px] sm:max-w-[120px] truncate"></span>
+            <span id="currentUserScore" class="bg-amber-100 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-md text-[11px] font-extrabold flex items-center gap-1">0 pts</span>
+          </div>
+        </div>
+
+        <!-- Leaderboard Pill Button -->
+        <button id="btnOpenLeaderboard" class="h-9 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-700 hover:text-blue-700 font-semibold text-xs flex items-center gap-1.5 transition-all shadow-xs" title="Leaderboard Rankings">
+          <i class="fa-solid fa-trophy text-amber-500 text-xs"></i>
+          <span class="hidden lg:inline text-xs font-bold">Rankings</span>
+        </button>
+
+        <!-- Logout Button -->
+        <button id="btnLogout" class="w-9 h-9 rounded-xl bg-slate-50 hover:bg-rose-50 border border-slate-200/80 hover:border-rose-200 text-slate-500 hover:text-rose-600 flex items-center justify-center transition-all shadow-xs" title="Logout">
+          <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+        </button>
+
+      </div>
+    </div>
+  </header>

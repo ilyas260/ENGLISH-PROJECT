@@ -13,7 +13,7 @@ const state = {
   currentUser: null,        // { id, username, email, total_score, isGuest }
   dbOnline: false,
   soundEnabled: true,
-  currentLevelFilter: 'ALL', // 'ALL' | 'A1' | 'A2' | 'B1' | 'B2' | 'C1'
+  currentLevelFilter: 'ALL', // 'ALL' | 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'MISC' (slang/silly extras)
   themes: [],
   currentTheme: null,
   exercises: [],
@@ -56,8 +56,17 @@ const FALLBACK_THEMES = [
     description: 'Learn the real talk: Rizz, Cap, Goat, and texting abbreviations so you never sound like an old bot!',
     color_theme: 'amber',
     icon: 'fa-fire',
-    level: 'B1',
+    level: 'MISC',
     exercise_count: 5
+  },
+  {
+    id: 4,
+    title: 'Cats & Dogs: Animal Idioms & Silly Memes',
+    description: 'Learn the goofiest pet idioms in English — raining cats and dogs, copycats and more!',
+    color_theme: 'amber',
+    icon: 'fa-paw',
+    level: 'MISC',
+    exercise_count: 3
   },
   {
     id: 2,
@@ -78,6 +87,25 @@ const FALLBACK_THEMES = [
     exercise_count: 3
   }
 ];
+
+// -------------------------------------------------------------------
+// CEFR vs. MISC: playful themes (Gen-Z slang, memes, animal idioms,
+// pop culture) are NOT a CEFR level – they live in their own "MISC"
+// category. Older databases may still label them A1/B1/B2, so titles
+// are also checked when themes are loaded.
+// -------------------------------------------------------------------
+const MISC_THEME_PATTERN = /gen[-\s]?z|slang|streamer|pop culture|cat(?:s)?\s*(?:&|and)\s*dog|dog(?:s)?\s*(?:&|and)\s*cat|meme|silly/i;
+
+function normalizeLevel(level) {
+  const value = (level || 'A1').toString().toUpperCase();
+  return ['A1', 'A2', 'B1', 'B2', 'C1', 'MISC'].includes(value) ? value : 'A1';
+}
+
+function withNormalizedLevel(theme) {
+  if (!theme) return theme;
+  const isMisc = MISC_THEME_PATTERN.test(theme.title || '');
+  return { ...theme, level: isMisc ? 'MISC' : normalizeLevel(theme.level) };
+}
 
 const FALLBACK_EXERCISES = {
   1: [
@@ -226,6 +254,35 @@ const FALLBACK_EXERCISES = {
       options_json: [],
       correct_answer: 'tell',
       close_answers_json: ['show', 'give', 'tel']
+    }
+  ],
+  4: [
+    {
+      id: 14,
+      theme_id: 4,
+      question_type: 'fill_blank',
+      question_text: 'Complete the silly idiom: "It is raining ________ and dogs outside!"',
+      options_json: [],
+      correct_answer: 'cats',
+      close_answers_json: ['cat', 'catz', 'kitten']
+    },
+    {
+      id: 15,
+      theme_id: 4,
+      question_type: 'multiple_choice',
+      question_text: 'Someone copies everything you do. What do you call them?',
+      options_json: ['A copycat', 'A doggo', 'A kitten', 'A bookworm'],
+      correct_answer: 'A copycat',
+      close_answers_json: ['copy cat', 'copycat', 'copy-cat']
+    },
+    {
+      id: 16,
+      theme_id: 4,
+      question_type: 'true_false',
+      question_text: '"Cat got your tongue?" is a real idiom used when someone is suddenly speechless.',
+      options_json: ['True', 'False'],
+      correct_answer: 'True',
+      close_answers_json: ['t', 'yes', 'vrai']
     }
   ]
 };
@@ -466,7 +523,6 @@ function evaluateAnswer(userAnswer, exercise) {
 // ====================================================================
 const DOM = {
   // Screens
-  authSection: document.getElementById('authSection'),
   dashboardSection: document.getElementById('dashboardSection'),
   quizSection: document.getElementById('quizSection'),
   resultsSection: document.getElementById('resultsSection'),
@@ -481,19 +537,6 @@ const DOM = {
   currentUserScore: document.getElementById('currentUserScore'),
   btnOpenLeaderboard: document.getElementById('btnOpenLeaderboard'),
   btnLogout: document.getElementById('btnLogout'),
-
-  // Auth
-  tabLogin: document.getElementById('tabLogin'),
-  tabRegister: document.getElementById('tabRegister'),
-  formLogin: document.getElementById('formLogin'),
-  formRegister: document.getElementById('formRegister'),
-  loginInput: document.getElementById('loginInput'),
-  loginPassword: document.getElementById('loginPassword'),
-  regUsername: document.getElementById('regUsername'),
-  regEmail: document.getElementById('regEmail'),
-  regPassword: document.getElementById('regPassword'),
-  btnPlayAsGuest: document.getElementById('btnPlayAsGuest'),
-  authAlert: document.getElementById('authAlert'),
 
   // Dashboard
   dashTotalScore: document.getElementById('dashTotalScore'),
@@ -563,20 +606,6 @@ const DOM = {
   btnCloseLessonBottom: document.getElementById('btnCloseLessonBottom'),
   btnStartFromLesson: document.getElementById('btnStartFromLesson'),
 
-  // Screen 1 Onboarding & Auth Modal
-  btnOnboardingStart: document.getElementById('btnOnboardingStart'),
-  btnOpenAuthModal: document.getElementById('btnOpenAuthModal'),
-  authModal: document.getElementById('authModal'),
-  btnCloseAuthModal: document.getElementById('btnCloseAuthModal'),
-  demoCredentialsHint: document.getElementById('demoCredentialsHint'),
-
-  // Bottom Navigation Bar
-  bottomNavBar: document.getElementById('bottomNavBar'),
-  navTabHome: document.getElementById('navTabHome'),
-  navTabProgress: document.getElementById('navTabProgress'),
-  navTabAchievements: document.getElementById('navTabAchievements'),
-  navTabSettings: document.getElementById('navTabSettings'),
-
   // Settings Modal
   settingsModal: document.getElementById('settingsModal'),
   btnCloseSettings: document.getElementById('btnCloseSettings'),
@@ -590,49 +619,28 @@ const DOM = {
 // ====================================================================
 // 5. NAVIGATION & SCREEN CONTROLLER
 // ====================================================================
-function setActiveBottomNavTab(activeTab) {
-  const tabs = [
-    { key: 'home', el: DOM.navTabHome },
-    { key: 'progress', el: DOM.navTabProgress },
-    { key: 'achievements', el: DOM.navTabAchievements },
-    { key: 'settings', el: DOM.navTabSettings }
-  ];
-  tabs.forEach(({ key, el }) => {
-    if (!el) return;
-    if (key === activeTab) {
-      el.classList.remove('text-slate-400');
-      el.classList.add('text-blue-600', 'font-black');
-    } else {
-      el.classList.remove('text-blue-600', 'font-black');
-      el.classList.add('text-slate-400', 'font-bold');
-    }
-  });
+// Signed-out sessions go back to the dedicated authentication page.
+function redirectToLogin() {
+  window.location.replace('login.html');
 }
 
 function showScreen(screenName) {
   // Hide all screens
-  DOM.authSection.classList.add('hidden');
   DOM.dashboardSection.classList.add('hidden');
   DOM.quizSection.classList.add('hidden');
   DOM.resultsSection.classList.add('hidden');
 
   // Show target
   if (screenName === 'auth') {
-    DOM.authSection.classList.remove('hidden');
-    if (DOM.bottomNavBar) DOM.bottomNavBar.classList.add('hidden');
-    if (DOM.authModal) DOM.authModal.classList.add('hidden');
+    redirectToLogin();
+    return;
   } else if (screenName === 'dashboard') {
     DOM.dashboardSection.classList.remove('hidden');
-    if (DOM.bottomNavBar) DOM.bottomNavBar.classList.remove('hidden');
-    setActiveBottomNavTab('home');
     renderDashboard();
   } else if (screenName === 'quiz') {
     DOM.quizSection.classList.remove('hidden');
-    if (DOM.bottomNavBar) DOM.bottomNavBar.classList.add('hidden');
   } else if (screenName === 'results') {
     DOM.resultsSection.classList.remove('hidden');
-    if (DOM.bottomNavBar) DOM.bottomNavBar.classList.remove('hidden');
-    setActiveBottomNavTab('home');
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -720,9 +728,15 @@ function updateDashboardProgress() {
 }
 
 function updateHeaderUser() {
-  const name = state.currentUser ? state.currentUser.username : 'Ilyas';
-  const score = state.currentUser ? (state.currentUser.total_score || 0) : 0;
-  
+  const user = state.currentUser;
+  const name = user ? (user.username || 'Learner') : '';
+  const score = user ? (user.total_score || 0) : 0;
+
+  // The top bar only carries account controls when someone is actually signed
+  // in. During authentication (login.html) this whole area is not rendered.
+  const controls = document.getElementById('userControls');
+  if (controls) controls.classList.toggle('hidden', !user);
+
   if (DOM.currentUserName) DOM.currentUserName.textContent = name;
   if (DOM.currentUserScore) DOM.currentUserScore.textContent = `${score} pts`;
   if (DOM.dashTotalScore) DOM.dashTotalScore.textContent = score;
@@ -771,13 +785,13 @@ async function loadThemes() {
     const res = await fetch(`${API_BASE}/api/themes`);
     if (res.ok) {
       const data = await res.json();
-      state.themes = data;
+      state.themes = data.map(withNormalizedLevel);
       return;
     }
   } catch (err) {
     console.warn('Using fallback themes:', err.message);
   }
-  state.themes = FALLBACK_THEMES;
+  state.themes = FALLBACK_THEMES.map(withNormalizedLevel);
 }
 
 async function loadThemeExercises(themeId) {
@@ -829,351 +843,11 @@ async function saveScoreToBackend(themeId, score) {
 }
 
 // ====================================================================
-// 7. AUTHENTICATION LOGIC (LOGIN, REGISTER, GUEST)
+// 7. AUTHENTICATION
+// Login / sign-up / guest access live in login.html + js/login.js.
+// This engine only maintains the session and redirects when signed out.
 // ====================================================================
-function showAuthAlert(message, isError = true) {
-  DOM.authAlert.textContent = message;
-  DOM.authAlert.className = isError
-    ? 'mb-4 p-3 border border-rose-500/40 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300'
-    : 'mb-4 p-3 border border-emerald-500/40 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300';
-  DOM.authAlert.classList.remove('hidden');
-}
 
-function clearAuthAlert() {
-  DOM.authAlert.classList.add('hidden');
-}
-
-// Tab Switching
-DOM.tabLogin.addEventListener('click', () => {
-  playClickSound();
-  clearAuthAlert();
-  DOM.tabLogin.className = 'flex-1 py-2 rounded-lg bg-indigo-600 text-white shadow-md transition-all';
-  DOM.tabRegister.className = 'flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all';
-  DOM.formLogin.classList.remove('hidden');
-  DOM.formRegister.classList.add('hidden');
-});
-
-DOM.tabRegister.addEventListener('click', () => {
-  playClickSound();
-  clearAuthAlert();
-  DOM.tabRegister.className = 'flex-1 py-2 rounded-lg bg-indigo-600 text-white shadow-md transition-all';
-  DOM.tabLogin.className = 'flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all';
-  DOM.formRegister.classList.remove('hidden');
-  DOM.formLogin.classList.add('hidden');
-});
-
-// Auto-fill Demo Credentials
-const demoHintEl = document.getElementById('demoCredentialsHint');
-if (demoHintEl) {
-  demoHintEl.addEventListener('click', () => {
-    DOM.loginInput.value = 'MemeMaster';
-    DOM.loginPassword.value = '123456';
-    playClickSound();
-  });
-}
-
-// Login Form Submit
-DOM.formLogin.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  playClickSound();
-  clearAuthAlert();
-
-  const loginVal = DOM.loginInput.value.trim();
-  const passwordVal = DOM.loginPassword.value;
-
-  try {
-    const res = await fetch(`${API_BASE}/api/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ login: loginVal, password: passwordVal })
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      playWrongSound();
-      showAuthAlert(data.error || 'Login failed. Please check your credentials.');
-      return;
-    }
-
-    // Success
-    playSuccessSound();
-    state.currentUser = {
-      ...data.user,
-      isGuest: false
-    };
-    localStorage.setItem('baamboozle_user', JSON.stringify(state.currentUser));
-    updateHeaderUser();
-    if (DOM.authModal) DOM.authModal.classList.add('hidden');
-    showScreen('dashboard');
-  } catch (err) {
-    // If backend is unreachable, notify user
-    playWrongSound();
-    showAuthAlert('Unable to connect to PostgreSQL server. You can click "Play as Guest" below to start immediately!');
-  }
-});
-
-// Register Form Submit
-DOM.formRegister.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  playClickSound();
-  clearAuthAlert();
-
-  const username = DOM.regUsername.value.trim();
-  const email = DOM.regEmail.value.trim();
-  const password = DOM.regPassword.value;
-
-  try {
-    const res = await fetch(`${API_BASE}/api/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password })
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      playWrongSound();
-      showAuthAlert(data.error || 'Registration failed.');
-      return;
-    }
-
-    playSuccessSound();
-    state.currentUser = {
-      ...data.user,
-      isGuest: false
-    };
-    localStorage.setItem('baamboozle_user', JSON.stringify(state.currentUser));
-    updateHeaderUser();
-    if (DOM.authModal) DOM.authModal.classList.add('hidden');
-    showScreen('dashboard');
-  } catch (err) {
-    playWrongSound();
-    showAuthAlert('Unable to reach server. Please check that Node.js & PostgreSQL are running.');
-  }
-});
-
-// Guest Play
-DOM.btnPlayAsGuest.addEventListener('click', () => {
-  playClickSound();
-  state.currentUser = {
-    id: null,
-    username: 'Guest_Hero_' + Math.floor(Math.random() * 900 + 100),
-    total_score: 0,
-    isGuest: true
-  };
-  localStorage.setItem('baamboozle_user', JSON.stringify(state.currentUser));
-  updateHeaderUser();
-  if (DOM.authModal) DOM.authModal.classList.add('hidden');
-  showScreen('dashboard');
-});
-
-// Logout
-DOM.btnLogout.addEventListener('click', () => {
-  playClickSound();
-  state.currentUser = null;
-  localStorage.removeItem('baamboozle_user');
-  updateHeaderUser();
-  showScreen('auth');
-});
-
-// ====================================================================
-// SCREEN 1 ONBOARDING & IN-CARD AUTH CONTROLS
-// ====================================================================
-function setupAuthOnboarding() {
-  const btnStart = document.getElementById('btnOnboardingStart');
-  const btnToggleToLogin = document.getElementById('btnToggleToLogin');
-  const btnBackToWelcome = document.getElementById('btnBackToWelcome');
-  const authWelcomeView = document.getElementById('authWelcomeView');
-  const authFormView = document.getElementById('authFormView');
-  const tabCardLogin = document.getElementById('tabCardLogin');
-  const tabCardRegister = document.getElementById('tabCardRegister');
-  const formCardLogin = document.getElementById('formCardLogin');
-  const formCardRegister = document.getElementById('formCardRegister');
-  const loginCardInput = document.getElementById('loginCardInput');
-  const loginCardPassword = document.getElementById('loginCardPassword');
-  const regCardUsername = document.getElementById('regCardUsername');
-  const regCardEmail = document.getElementById('regCardEmail');
-  const regCardPassword = document.getElementById('regCardPassword');
-  const demoHintCard = document.getElementById('demoCredentialsHintCard');
-  const authCardAlert = document.getElementById('authCardAlert');
-  const btnCardPlayGuest = document.getElementById('btnCardPlayAsGuest');
-
-  function showCardAlert(msg, isSuccess = false) {
-    if (!authCardAlert) return;
-    authCardAlert.textContent = msg;
-    authCardAlert.className = isSuccess
-      ? 'p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-200 block'
-      : 'p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-rose-50 text-rose-800 border border-rose-200 block';
-  }
-
-  function clearCardAlert() {
-    if (authCardAlert) {
-      authCardAlert.textContent = '';
-      authCardAlert.className = 'hidden';
-    }
-  }
-
-  // Get Started button
-  if (btnStart) {
-    btnStart.addEventListener('click', () => {
-      playClickSound();
-      if (state.currentUser) {
-        showScreen('dashboard');
-      } else {
-        DOM.btnPlayAsGuest.click();
-      }
-    });
-  }
-
-  // Toggle to Login form view
-  if (btnToggleToLogin) {
-    btnToggleToLogin.addEventListener('click', () => {
-      playClickSound();
-      clearCardAlert();
-      if (authWelcomeView) authWelcomeView.classList.add('hidden');
-      if (authFormView) authFormView.classList.remove('hidden');
-    });
-  }
-
-  // Back to Welcome view
-  if (btnBackToWelcome) {
-    btnBackToWelcome.addEventListener('click', () => {
-      playClickSound();
-      clearCardAlert();
-      if (authFormView) authFormView.classList.add('hidden');
-      if (authWelcomeView) authWelcomeView.classList.remove('hidden');
-    });
-  }
-
-  // Card Tab switcher (Login vs Register)
-  if (tabCardLogin && tabCardRegister) {
-    tabCardLogin.addEventListener('click', () => {
-      playClickSound();
-      clearCardAlert();
-      tabCardLogin.className = 'flex-1 py-2 rounded-lg bg-white text-blue-900 shadow-sm transition-all cursor-pointer text-center';
-      tabCardRegister.className = 'flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-900 transition-all cursor-pointer text-center';
-      if (formCardLogin) formCardLogin.classList.remove('hidden');
-      if (formCardRegister) formCardRegister.classList.add('hidden');
-    });
-
-    tabCardRegister.addEventListener('click', () => {
-      playClickSound();
-      clearCardAlert();
-      tabCardRegister.className = 'flex-1 py-2 rounded-lg bg-white text-blue-900 shadow-sm transition-all cursor-pointer text-center';
-      tabCardLogin.className = 'flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-900 transition-all cursor-pointer text-center';
-      if (formCardRegister) formCardRegister.classList.remove('hidden');
-      if (formCardLogin) formCardLogin.classList.add('hidden');
-    });
-  }
-
-  // Demo autofill in card
-  if (demoHintCard) {
-    demoHintCard.addEventListener('click', () => {
-      playClickSound();
-      if (loginCardInput) loginCardInput.value = 'MemeMaster';
-      if (loginCardPassword) loginCardPassword.value = '123456';
-      demoHintCard.classList.add('bg-blue-100', 'ring-2', 'ring-blue-400');
-      setTimeout(() => demoHintCard.classList.remove('bg-blue-100', 'ring-2', 'ring-blue-400'), 700);
-    });
-  }
-
-  // In-Card Form Login Submit
-  if (formCardLogin) {
-    formCardLogin.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      playClickSound();
-      clearCardAlert();
-
-      const loginVal = loginCardInput ? loginCardInput.value.trim() : '';
-      const passwordVal = loginCardPassword ? loginCardPassword.value : '';
-
-      try {
-        const res = await fetch(`${API_BASE}/api/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ login: loginVal, password: passwordVal })
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          playWrongSound();
-          showCardAlert(data.error || 'Login failed. Please check your credentials.');
-          return;
-        }
-
-        playSuccessSound();
-        state.currentUser = { ...data.user, isGuest: false };
-        localStorage.setItem('baamboozle_user', JSON.stringify(state.currentUser));
-        updateHeaderUser();
-        showScreen('dashboard');
-      } catch (err) {
-        playWrongSound();
-        showCardAlert('Unable to connect to PostgreSQL server. Click "Play as Guest" below to start immediately!');
-      }
-    });
-  }
-
-  // In-Card Form Register Submit
-  if (formCardRegister) {
-    formCardRegister.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      playClickSound();
-      clearCardAlert();
-
-      const username = regCardUsername ? regCardUsername.value.trim() : '';
-      const email = regCardEmail ? regCardEmail.value.trim() : '';
-      const password = regCardPassword ? regCardPassword.value : '';
-
-      try {
-        const res = await fetch(`${API_BASE}/api/auth/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, email, password })
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          playWrongSound();
-          showCardAlert(data.error || 'Registration failed.');
-          return;
-        }
-
-        playSuccessSound();
-        state.currentUser = { ...data.user, isGuest: false };
-        localStorage.setItem('baamboozle_user', JSON.stringify(state.currentUser));
-        updateHeaderUser();
-        showScreen('dashboard');
-      } catch (err) {
-        playWrongSound();
-        showCardAlert('Unable to reach server. Please check your network.');
-      }
-    });
-  }
-
-  // Play as Guest from card (both buttons)
-  if (btnCardPlayGuest) {
-    btnCardPlayGuest.addEventListener('click', () => { DOM.btnPlayAsGuest.click(); });
-  }
-  const btnCardPlayGuest2 = document.getElementById('btnCardPlayAsGuest2');
-  if (btnCardPlayGuest2) {
-    btnCardPlayGuest2.addEventListener('click', () => { DOM.btnPlayAsGuest.click(); });
-  }
-
-  // Show/hide password toggle
-  const btnTogglePwdLogin = document.getElementById('btnTogglePwdLogin');
-  if (btnTogglePwdLogin && loginCardPassword) {
-    btnTogglePwdLogin.addEventListener('click', () => {
-      const isHidden = loginCardPassword.type === 'password';
-      loginCardPassword.type = isHidden ? 'text' : 'password';
-      btnTogglePwdLogin.querySelector('i').className = isHidden ? 'fa-solid fa-eye-slash text-sm' : 'fa-solid fa-eye text-sm';
-    });
-  }
-  const btnTogglePwdReg = document.getElementById('btnTogglePwdReg');
-  if (btnTogglePwdReg && regCardPassword) {
-    btnTogglePwdReg.addEventListener('click', () => {
-      const isHidden = regCardPassword.type === 'password';
-      regCardPassword.type = isHidden ? 'text' : 'password';
-      btnTogglePwdReg.querySelector('i').className = isHidden ? 'fa-solid fa-eye-slash text-sm' : 'fa-solid fa-eye text-sm';
-    });
-  }
-}
 
 // ====================================================================
 // BOTTOM NAVIGATION DOCK & SETTINGS MODAL
@@ -1204,7 +878,6 @@ function setupSettingsModal() {
     DOM.btnCloseSettings.addEventListener('click', () => {
       playClickSound();
       DOM.settingsModal.classList.add('hidden');
-      setActiveBottomNavTab('home');
     });
   }
 
@@ -1222,49 +895,6 @@ function setupSettingsModal() {
     DOM.btnSettingsLogout.addEventListener('click', () => {
       DOM.settingsModal.classList.add('hidden');
       if (DOM.btnLogout) DOM.btnLogout.click();
-    });
-  }
-}
-
-function setupBottomNavBar() {
-  if (DOM.navTabHome) {
-    DOM.navTabHome.addEventListener('click', () => {
-      playClickSound();
-      setActiveBottomNavTab('home');
-      showScreen('dashboard');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-
-  if (DOM.navTabProgress) {
-    DOM.navTabProgress.addEventListener('click', () => {
-      playClickSound();
-      setActiveBottomNavTab('progress');
-      if (DOM.dashboardSection.classList.contains('hidden')) {
-        showScreen('dashboard');
-      }
-      const progressHero = document.querySelector('.bg-gradient-to-br.from-slate-900.via-slate-800');
-      if (progressHero) {
-        progressHero.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        progressHero.classList.add('ring-4', 'ring-blue-500/60');
-        setTimeout(() => progressHero.classList.remove('ring-4', 'ring-blue-500/60'), 1500);
-      }
-    });
-  }
-
-  if (DOM.navTabAchievements) {
-    DOM.navTabAchievements.addEventListener('click', () => {
-      playClickSound();
-      setActiveBottomNavTab('achievements');
-      if (DOM.btnOpenLeaderboard) DOM.btnOpenLeaderboard.click();
-    });
-  }
-
-  if (DOM.navTabSettings) {
-    DOM.navTabSettings.addEventListener('click', () => {
-      playClickSound();
-      setActiveBottomNavTab('settings');
-      openSettingsModal();
     });
   }
 }
@@ -1306,6 +936,11 @@ function setLevelFilter(level) {
       active: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-rose-600 text-white shadow-md shadow-rose-500/25 border border-rose-600 cursor-pointer flex items-center gap-2',
       inactive: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs',
       dotColor: 'bg-rose-500'
+    },
+    MISC: {
+      active: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-fuchsia-600 text-white shadow-md shadow-fuchsia-500/25 border border-fuchsia-600 cursor-pointer flex items-center gap-2',
+      inactive: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200/90 hover:border-fuchsia-300 cursor-pointer flex items-center gap-2 shadow-2xs',
+      dotColor: 'bg-fuchsia-500'
     }
   };
 
@@ -1338,12 +973,13 @@ function renderDashboard() {
     B1: { badge: 'bg-orange-50 text-orange-700 border border-orange-200/80', dot: 'bg-orange-500', label: 'B1 Intermediate' },
     B2: { badge: 'bg-purple-50 text-purple-700 border border-purple-200/80', dot: 'bg-purple-500', label: 'B2 Upper-Int' },
     C1: { badge: 'bg-rose-50 text-rose-700 border border-rose-200/80', dot: 'bg-rose-500', label: 'C1 Advanced' },
+    MISC: { badge: 'bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200/80', dot: 'bg-fuchsia-500', label: 'MISC Silly Stuff' },
   };
 
   const activeLevel = state.currentLevelFilter || 'ALL';
   const filteredThemes = activeLevel === 'ALL'
     ? state.themes
-    : state.themes.filter(t => (t.level || 'A1').toUpperCase() === activeLevel.toUpperCase());
+    : state.themes.filter(t => withNormalizedLevel(t).level === activeLevel.toUpperCase());
 
   const completedList = getCompletedThemes();
 
@@ -1421,8 +1057,8 @@ function getThemeVisuals(theme) {
 }
 
   filteredThemes.forEach((theme) => {
-    const lvl = (theme.level || 'A1').toUpperCase();
-    const lvlInfo = levelStyles[lvl] || levelStyles.A1;
+    const lvl = withNormalizedLevel(theme).level;
+    const lvlInfo = levelStyles[lvl] || levelStyles.MISC;
     const isCompleted = completedList.includes(theme.id);
     const vis = getThemeVisuals(theme);
 
@@ -2892,31 +2528,46 @@ function setupNotifications() {
 // 15. INITIALIZATION
 // ====================================================================
 async function initApp() {
+  // The app is private: authentication is handled exclusively by login.html
+  const storedUser = localStorage.getItem('baamboozle_user');
+  if (!storedUser) {
+    redirectToLogin();
+    return;
+  }
+  try {
+    state.currentUser = JSON.parse(storedUser);
+    if (!state.currentUser) throw new Error('Empty session');
+  } catch (e) {
+    localStorage.removeItem('baamboozle_user');
+    redirectToLogin();
+    return;
+  }
+
   setupQuickAccessBar();
   setupNotifications();
-  setupAuthOnboarding();
-  setupBottomNavBar();
   setupSettingsModal();
-  // Bind CEFR Level Selector Tabs
+
+  // Logout always returns to the dedicated login page
+  if (DOM.btnLogout) {
+    DOM.btnLogout.addEventListener('click', () => {
+      playClickSound();
+      state.currentUser = null;
+      localStorage.removeItem('baamboozle_user');
+      redirectToLogin();
+    });
+  }
+
+  // Bind CEFR Level + Misc category selector tabs
   const levelBtns = document.querySelectorAll('.level-tab-btn');
   levelBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       playClickSound();
-      const level = btn.getAttribute('data-level');
-      setLevelFilter(level);
+      setLevelFilter(btn.getAttribute('data-level'));
     });
   });
 
-  // Check local stored session
-  const storedUser = localStorage.getItem('baamboozle_user');
-  if (storedUser) {
-    try {
-      state.currentUser = JSON.parse(storedUser);
-      updateHeaderUser();
-    } catch (e) {
-      localStorage.removeItem('baamboozle_user');
-    }
-  }
+  // Top bar now follows the signed-in account
+  updateHeaderUser();
 
   // Check Database and scan stickers
   await Promise.all([
@@ -2925,13 +2576,13 @@ async function initApp() {
     loadThemes()
   ]);
 
-  // Navigate to initial screen
-  if (state.currentUser) {
-    showScreen('dashboard');
-  } else {
-    showScreen('auth');
-  }
+  showScreen('dashboard');
 }
 
-// Start application once DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initApp);
+// Start once the DOM is ready. loader.js injects the partials before loading
+// this file, so document.readyState is usually already "complete" here.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}

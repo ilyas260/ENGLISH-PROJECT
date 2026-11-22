@@ -1,0 +1,210 @@
+    /* Soft Light Background like the Reference Image */
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #EDF2FB 0%, #E2E8F8 50%, #EDF2FB 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: #1E293B;
+    }
+
+    /* Royal Blue Primary Buttons */
+    .btn-royal {
+      background-color: #1E3A8A;
+      color: #FFFFFF;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-royal:hover {
+      background-color: #1D4ED8;
+      transform: translateY(-1.5px);
+      box-shadow: 0 10px 25px -5px rgba(30, 64, 175, 0.35);
+    }
+    .btn-royal:active {
+      transform: translateY(0);
+      background-color: #1E3A8A;
+    }
+
+    /* Secondary Soft Button */
+    .btn-secondary {
+      background-color: #FFFFFF;
+      color: #1E3A8A;
+      border: 1.5px solid #E2E8F0;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background-color: #F8FAFC;
+      border-color: #CBD5E1;
+      transform: translateY(-1px);
+    }
+
+    /* Soft Elevated Cards */
+    .app-card {
+      background-color: #FFFFFF;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 10px 30px -5px rgba(30, 58, 138, 0.06), 0 4px 12px -2px rgba(30, 58, 138, 0.03);
+    }
+
+    /* Option Pill Buttons for Quizzes */
+    .option-pill {
+      background-color: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      color: #1E293B;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .option-pill:hover {
+      background-color: #EFF6FF;
+      border-color: #93C5FD;
+      transform: translateY(-1px);
+    }
+    .option-pill:active {
+      transform: translateY(0);
+    }
+
+    /* Shake Animation for Wrong Answers */
+    @keyframes shakeAnimation {
+      0%, 100% { transform: translateX(0); }
+      15% { transform: translateX(-10px); }
+      30% { transform: translateX(8px); }
+      45% { transform: translateX(-6px); }
+      60% { transform: translateX(4px); }
+      75% { transform: translateX(-2px); }
+    }
+    .shake-card {
+      animation: shakeAnimation 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    /* Scale In for Modals */
+    @keyframes popIn {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .modal-enter {
+      animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Custom Modern Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F1F5F9;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* Cloud shape decor */
+    .cloud-bg {
+      background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+    }
+
+    /* ============================================================
+       LOGIN PAGE ANIMATIONS
+    ============================================================ */
+
+    /* Hero mascot floats up */
+    @keyframes floatUp {
+      0% { transform: translateY(32px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .anim-float-up {
+      animation: floatUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Title slides in from left */
+    @keyframes slideInLeft {
+      0% { transform: translateX(-24px); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    .anim-slide-left { animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .anim-slide-left-d1 { animation: slideInLeft 0.6s 0.08s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .anim-slide-left-d2 { animation: slideInLeft 0.6s 0.16s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .anim-slide-left-d3 { animation: slideInLeft 0.6s 0.24s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+    /* Card rises up */
+    @keyframes riseCard {
+      0% { transform: translateY(40px) scale(0.97); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .anim-rise { animation: riseCard 0.65s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+    /* Form element fade-in stagger */
+    @keyframes fadeSlideIn {
+      0% { transform: translateY(12px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .form-row-1 { animation: fadeSlideIn 0.4s 0.05s cubic-bezier(0.16,1,0.3,1) both; }
+    .form-row-2 { animation: fadeSlideIn 0.4s 0.12s cubic-bezier(0.16,1,0.3,1) both; }
+    .form-row-3 { animation: fadeSlideIn 0.4s 0.19s cubic-bezier(0.16,1,0.3,1) both; }
+    .form-row-4 { animation: fadeSlideIn 0.4s 0.26s cubic-bezier(0.16,1,0.3,1) both; }
+    .form-row-5 { animation: fadeSlideIn 0.4s 0.33s cubic-bezier(0.16,1,0.3,1) both; }
+
+    /* Shimmer on submit button */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .btn-shimmer {
+      background: linear-gradient(90deg, #1E3A8A 0%, #2563EB 40%, #1D4ED8 60%, #1E3A8A 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+    .btn-shimmer:hover { background-size: 200% 100%; }
+
+    /* Floating particles behind hero */
+    @keyframes particleDrift {
+      0%   { transform: translate(0, 0) rotate(0deg); opacity: 0.7; }
+      50%  { transform: translate(8px, -14px) rotate(180deg); opacity: 1; }
+      100% { transform: translate(0, 0) rotate(360deg); opacity: 0.7; }
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: particleDrift linear infinite;
+      pointer-events: none;
+    }
+
+    /* Tab switching slide */
+    @keyframes tabSlideIn {
+      0% { transform: translateX(16px); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    .tab-enter { animation: tabSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+    /* Auth page outer glow pulse */
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.0), 0 20px 60px -15px rgba(30,58,138,0.25); }
+      50%       { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.08), 0 20px 60px -15px rgba(30,58,138,0.35); }
+    }
+    .auth-card-glow { animation: glowPulse 3s ease-in-out infinite; }
+
+    /* Mascot subtle bob */
+    @keyframes mascotBob {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-6px); }
+    }
+    .mascot-bob { animation: mascotBob 3.5s ease-in-out infinite; }
+
+    /* Success checkmark spin-in */
+    @keyframes checkIn {
+      0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+      70% { transform: scale(1.2) rotate(5deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .anim-check { animation: checkIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    /* Auth section full-page layout */
+    #authSection {
+      min-height: calc(100vh - 120px);
+      align-items: center;
+    }
+
+    /* Smooth tab fade */
+    .auth-form-transition {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }

@@ -47,6 +47,18 @@ async function ensureDatabaseSchema() {
       // Ensure level column exists in themes table
       await pool.query("ALTER TABLE themes ADD COLUMN IF NOT EXISTS level VARCHAR(10) DEFAULT 'A1'");
     }
+
+    // Playful themes (Gen-Z slang, memes, silly animal idioms, pop culture)
+    // are a MISC category – they are not a CEFR level.
+    await pool.query(`
+      UPDATE themes SET level = 'MISC'
+      WHERE id IN (4, 5, 8)
+         OR title ILIKE '%slang%'
+         OR title ILIKE '%gen-z%'
+         OR title ILIKE '%gen z%'
+         OR title ILIKE '%pop culture%'
+         OR title ILIKE '%meme%'
+    `);
   } catch (err) {
     console.warn('⚠️  Auto-migration check note:', err.message);
   }

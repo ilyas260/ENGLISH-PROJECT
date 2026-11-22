@@ -1,0 +1,359 @@
+  <!-- ============================================================== -->
+  <!-- MODAL: REACTION STICKER / VIDEO POPUP (CLEAN & LARGE) -->
+  <!-- ============================================================== -->
+  <div id="reactionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div id="reactionModalCard" class="app-card rounded-[32px] max-w-lg w-full p-6 sm:p-7 text-center relative overflow-hidden shadow-2xl modal-enter">
+      
+      <!-- Top Score Pill Badge -->
+      <div id="reactionScoreBadge" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider mb-4 shadow-sm bg-emerald-100 text-emerald-800 border border-emerald-300">
+        +100 POINTS! 🚀
+      </div>
+
+      <!-- HUGE Sticker Media Container (Video MP4 or GIF / JPG) -->
+      <div class="w-full max-w-sm h-72 sm:h-80 mx-auto mb-4 relative flex items-center justify-center">
+        <div id="reactionMediaContainer" class="relative w-full h-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-inner flex items-center justify-center p-2">
+          <img id="reactionStickerImg" src="" alt="Reaction Meme" class="w-full h-full object-contain rounded-xl">
+          <video id="reactionStickerVideo" class="w-full h-full object-contain rounded-xl hidden" autoplay loop muted playsinline></video>
+        </div>
+      </div>
+
+      <!-- Reaction Slogan / Punchline -->
+      <h3 id="reactionTitle" class="text-xl sm:text-2xl font-black font-display text-slate-900 mb-1 leading-tight">
+        PURE GENIUS!
+      </h3>
+
+      <!-- Clear Feedback & Answer Explanation -->
+      <p id="reactionFeedback" class="text-xs sm:text-sm text-slate-600 font-semibold mb-6 px-4 leading-relaxed">
+        You nailed the answer on the first try!
+      </p>
+
+      <!-- Next Question Button -->
+      <button id="btnNextQuestion" class="btn-royal w-full py-4 rounded-2xl font-extrabold text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md">
+        <span>Next Question</span>
+        <i class="fa-solid fa-arrow-right text-xs"></i>
+      </button>
+      <p class="text-[10px] text-slate-400 font-medium mt-2">Press <kbd class="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 font-mono text-slate-600">Enter</kbd> to continue</p>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================== -->
+  <!-- MODAL: SETTINGS & PREFERENCES -->
+  <!-- ============================================================== -->
+  <div id="settingsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div class="app-card rounded-3xl max-w-md w-full p-6 sm:p-7 relative shadow-2xl modal-enter border border-slate-200">
+      
+      <!-- Close button -->
+      <button id="btnCloseSettings" class="absolute top-4 right-4 w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center text-sm font-bold transition-all cursor-pointer shadow-2xs">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Header -->
+      <div class="flex items-center gap-3.5 mb-5 pr-10">
+        <div class="w-11 h-11 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl shadow-sm">
+          <i class="fa-solid fa-gear"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-black font-display text-slate-900">Settings & Preferences</h3>
+          <p class="text-xs font-semibold text-slate-500">Audio, account, and application controls</p>
+        </div>
+      </div>
+
+      <!-- Settings List -->
+      <div class="space-y-3 mb-6">
+        <!-- Sound FX -->
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-volume-high"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-slate-900 block">Sound Effects</span>
+              <span class="text-[11px] text-slate-500 block">Audio feedback during quizzes</span>
+            </div>
+          </div>
+          <button id="btnSettingsSoundToggle" class="px-3 py-1.5 rounded-xl font-bold text-xs bg-blue-600 text-white cursor-pointer shadow-sm">
+            ON
+          </button>
+        </div>
+
+        <!-- Database Cloud Sync -->
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-database"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-slate-900 block">PostgreSQL Database</span>
+              <span id="settingsDbText" class="text-[11px] text-emerald-600 font-semibold block">Connected (scores sync)</span>
+            </div>
+          </div>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse mr-2"></span>
+        </div>
+
+        <!-- Active User Profile Info -->
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div>
+              <span id="settingsUserName" class="text-xs font-bold text-slate-900 block">Ilyas</span>
+              <span id="settingsUserScore" class="text-[11px] text-slate-500 block">0 Total Points</span>
+            </div>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">Active</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="space-y-2">
+        <button id="btnSettingsLogout" class="w-full py-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Log Out of Profile</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================== -->
+  <!-- MODAL: LEADERBOARD DRAWER -->
+  <!-- ============================================================== -->
+  <div id="leaderboardModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div class="app-card rounded-3xl max-w-md w-full p-6 sm:p-7 relative shadow-2xl">
+      
+      <!-- Close button -->
+      <button id="btnCloseLeaderboard" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold transition-colors">
+        ✕
+      </button>
+
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-sm">
+          🏆
+        </div>
+        <div>
+          <h3 class="text-lg font-black font-display uppercase tracking-tight text-slate-900">Leaderboard</h3>
+          <p class="text-xs font-semibold text-slate-500">Hall of English Legends</p>
+        </div>
+      </div>
+
+      <!-- Leaderboard List -->
+      <div id="leaderboardList" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+        <div class="text-center py-6 text-xs text-slate-400">Loading rankings...</div>
+      </div>
+
+      <!-- Footer -->
+      <div class="mt-5 pt-4 border-t border-slate-100 text-center">
+        <button id="btnRefreshLeaderboard" class="btn-secondary px-4 py-2 rounded-xl text-xs font-bold uppercase">
+          <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Refresh Rankings
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================== -->
+  <!-- MODAL: GRAMMAR LESSON (Professional EdTech Learning Modal) -->
+  <!-- ============================================================== -->
+  <div id="lessonModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div class="app-card rounded-3xl max-w-3xl w-full p-5 sm:p-7 relative max-h-[90vh] flex flex-col shadow-2xl modal-enter border border-slate-200">
+      
+      <!-- Close button -->
+      <button id="btnCloseLesson" class="absolute top-4 right-4 sm:top-5 sm:right-5 w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center text-sm font-bold transition-all cursor-pointer shadow-2xs" title="Close Lesson">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Modal Header -->
+      <div class="flex items-center gap-3.5 mb-4 pr-12">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-700 text-white flex items-center justify-center text-xl flex-shrink-0 shadow-md shadow-blue-500/20">
+          <i class="fa-solid fa-book-open-reader"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="inline-block px-2.5 py-0.5 rounded-md bg-blue-50 text-[10px] font-black text-blue-700 uppercase tracking-wider border border-blue-200/80">
+              Grammar Masterclass
+            </span>
+            <span id="lessonModalLevelBadge" class="inline-block px-2 py-0.5 rounded-md bg-emerald-50 text-[10px] font-black text-emerald-700 uppercase tracking-wider border border-emerald-200/80">
+              A1 Beginner
+            </span>
+            <span class="text-[11px] font-semibold text-slate-400 flex items-center gap-1 hidden sm:inline-flex">
+              <i class="fa-regular fa-clock text-[10px]"></i> 3 min read
+            </span>
+            <span class="text-[11px] font-semibold text-blue-600 bg-blue-50/80 px-2 py-0.5 rounded border border-blue-200/50 hidden md:inline-flex items-center gap-1">
+              <i class="fa-solid fa-volume-high text-[10px]"></i> Click examples to listen
+            </span>
+          </div>
+          <h3 id="lessonModalTitle" class="text-lg sm:text-xl font-black font-display tracking-tight text-slate-900 leading-snug">
+            Lesson Title
+          </h3>
+        </div>
+      </div>
+
+      <!-- Lesson Body (Scrollable with custom-scrollbar) -->
+      <div id="lessonModalBody" class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-4 text-xs sm:text-sm text-slate-700 bg-slate-50/60 p-4 sm:p-5 rounded-2xl border border-slate-200/80 mb-4 leading-relaxed">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Footer Action -->
+      <div class="pt-2 flex items-center justify-between gap-3 border-t border-slate-100">
+        <button id="btnCloseLessonBottom" class="btn-secondary h-11 px-4 sm:px-5 rounded-xl text-xs font-bold uppercase cursor-pointer">
+          Close
+        </button>
+        <button id="btnStartFromLesson" class="h-11 px-6 rounded-xl font-extrabold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-600 hover:from-blue-800 hover:to-indigo-700 hover:scale-[1.01] active:scale-95 transition-all">
+          <span>Start Practice Now</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================== -->
+  <!-- MODAL: SPEAKING & PRONUNCIATION LAB -->
+  <!-- ============================================================== -->
+  <div id="speakingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div class="app-card rounded-[32px] max-w-lg w-full p-6 sm:p-8 relative shadow-2xl modal-enter">
+      
+      <!-- Close button -->
+      <button id="btnCloseSpeaking" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer">
+        ✕
+      </button>
+
+      <!-- Modal Header -->
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl shadow-sm flex-shrink-0">
+          <i class="fa-solid fa-microphone-lines"></i>
+        </div>
+        <div>
+          <span class="inline-block px-2.5 py-0.5 rounded-full bg-purple-50 text-[10px] font-black text-purple-700 uppercase tracking-wider mb-0.5">
+            Voice & Fluency Trainer
+          </span>
+          <h3 class="text-xl font-black font-display tracking-tight text-slate-900">
+            Speaking Practice Lab
+          </h3>
+        </div>
+      </div>
+
+      <!-- Active Practice Phrase Card -->
+      <div class="app-card rounded-2xl p-5 mb-5 bg-gradient-to-br from-purple-50/50 to-indigo-50/30 border border-purple-100 text-center">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-purple-700 block mb-2" id="speakingCategory">
+          Daily English Idiom
+        </span>
+        <h4 class="text-lg sm:text-xl font-black text-slate-900 leading-snug mb-2" id="speakingPhraseText">
+          "Break a leg! You'll do fantastic tonight."
+        </h4>
+        <p class="text-xs font-semibold text-slate-500" id="speakingMeaningText">
+          Meaning: Good luck! (Used especially before a performance)
+        </p>
+
+        <!-- Audio Wave Animation Placeholder -->
+        <div class="mt-4 flex items-center justify-center gap-1.5 h-8">
+          <span class="w-1.5 h-4 bg-purple-400 rounded-full animate-pulse"></span>
+          <span class="w-1.5 h-7 bg-purple-600 rounded-full animate-pulse" style="animation-delay: 0.15s"></span>
+          <span class="w-1.5 h-5 bg-indigo-500 rounded-full animate-pulse" style="animation-delay: 0.3s"></span>
+          <span class="w-1.5 h-8 bg-purple-700 rounded-full animate-pulse" style="animation-delay: 0.45s"></span>
+          <span class="w-1.5 h-3 bg-purple-400 rounded-full animate-pulse" style="animation-delay: 0.6s"></span>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="space-y-3">
+        <button id="btnPlaySpeech" class="btn-royal w-full py-4 rounded-2xl font-extrabold text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md bg-purple-700 hover:bg-purple-800">
+          <i class="fa-solid fa-volume-high text-base"></i>
+          <span>Listen Native Pronunciation (TTS)</span>
+        </button>
+
+        <div class="flex items-center gap-3">
+          <button id="btnPrevSpeaking" class="btn-secondary flex-1 py-3 rounded-2xl font-bold text-xs uppercase flex items-center justify-center gap-1.5 cursor-pointer">
+            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+            <span>Previous</span>
+          </button>
+          <button id="btnNextSpeaking" class="btn-secondary flex-1 py-3 rounded-2xl font-bold text-xs uppercase flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>Next Phrase</span>
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ============================================================== -->
+  <!-- MODAL: VOCABULARY FLASHCARDS BANK -->
+  <!-- ============================================================== -->
+  <div id="vocabModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div class="app-card rounded-[32px] max-w-lg w-full p-6 sm:p-8 relative shadow-2xl modal-enter">
+      
+      <!-- Close button -->
+      <button id="btnCloseVocab" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer">
+        ✕
+      </button>
+
+      <!-- Modal Header -->
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl shadow-sm flex-shrink-0">
+          <i class="fa-solid fa-spell-check"></i>
+        </div>
+        <div>
+          <span class="inline-block px-2.5 py-0.5 rounded-full bg-amber-50 text-[10px] font-black text-amber-700 uppercase tracking-wider mb-0.5">
+            Word Bank & Flashcards
+          </span>
+          <h3 class="text-xl font-black font-display tracking-tight text-slate-900">
+            Vocabulary Builder
+          </h3>
+        </div>
+      </div>
+
+      <!-- Flashcard Content -->
+      <div class="app-card rounded-2xl p-6 mb-5 bg-gradient-to-br from-amber-50/50 to-orange-50/30 border border-amber-200 text-center relative">
+        <div class="flex items-center justify-between mb-3">
+          <span id="vocabLevelBadge" class="bg-amber-100 text-amber-900 text-[11px] font-black px-2.5 py-0.5 rounded-full border border-amber-300">
+            B1 Intermediate
+          </span>
+          <span id="vocabCardCounter" class="text-xs font-bold text-slate-400 font-mono">
+            Card 1 of 12
+          </span>
+        </div>
+
+        <div class="my-4">
+          <h4 id="vocabWord" class="text-3xl font-black font-display text-slate-900 mb-1">
+            Sensible
+          </h4>
+          <span id="vocabPhonetic" class="text-xs font-mono text-slate-500 font-semibold block mb-3">
+            /ˈsen.sə.bəl/ • adjective
+          </span>
+          <p id="vocabDefinition" class="text-sm font-semibold text-slate-700 leading-relaxed mb-4">
+            Having or showing good sense or practical judgment (not foolish).
+          </p>
+          <div class="p-3 bg-white rounded-xl border border-amber-100 text-xs font-medium text-slate-600 italic">
+            "It would be <b>sensible</b> to take an umbrella—look at those clouds!"
+          </div>
+        </div>
+
+        <!-- Voice Speak Button -->
+        <button id="btnPlayVocabWord" class="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-all shadow-sm cursor-pointer">
+          <i class="fa-solid fa-volume-high"></i>
+          <span>Listen Pronunciation</span>
+        </button>
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="flex items-center gap-3">
+        <button id="btnPrevVocab" class="btn-secondary flex-1 py-3 rounded-2xl font-bold text-xs uppercase flex items-center justify-center gap-1.5 cursor-pointer">
+          <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          <span>Previous</span>
+        </button>
+        <button id="btnNextVocab" class="btn-royal flex-1 py-3 rounded-2xl font-bold text-xs uppercase flex items-center justify-center gap-1.5 cursor-pointer shadow-md bg-amber-600 hover:bg-amber-700">
+          <span>Next Word</span>
+          <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>

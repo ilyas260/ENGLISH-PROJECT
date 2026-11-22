@@ -1,0 +1,81 @@
+    <section id="resultsSection" class="py-6 hidden">
+      <div class="max-w-md mx-auto app-card rounded-[36px] p-6 sm:p-8 text-center relative overflow-hidden shadow-card">
+        
+        <!-- Big Golden Trophy Illustration with Confetti -->
+        <div class="relative w-36 h-36 mx-auto mb-3 flex items-center justify-center">
+          <div class="absolute inset-0 bg-amber-100 rounded-full blur-xl"></div>
+          <div class="text-8xl filter drop-shadow-md relative z-10 animate-bounce">
+            🏆
+          </div>
+        </div>
+
+        <!-- Title & Subtitle matching Screen 4: "Great Job! You scored" -->
+        <h2 id="finalTitle" class="text-3xl font-black font-display text-slate-900 mb-1">
+          Great Job!
+        </h2>
+        <p id="finalSubtitle" class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-5">
+          You completed the challenge!
+        </p>
+
+        <!-- Star Badge: ⭐ 9 / 10 and ⚡ +10 XP -->
+        <div class="inline-flex items-center gap-3 bg-blue-50 border border-blue-200 px-5 py-2.5 rounded-2xl mb-5 shadow-sm">
+          <span class="text-2xl">⭐</span>
+          <span id="finalScoreStar" class="text-xl font-black font-display text-blue-900">9 / 10</span>
+          <span class="text-slate-300">|</span>
+          <span id="finalEarnedScoreBadge" class="text-xs font-black text-amber-600 flex items-center gap-1 font-mono">
+            ⚡ <span id="finalEarnedScore">+500 XP</span>
+          </span>
+        </div>
+
+        <!-- Performance Meme Sticker / Video Showcase -->
+        <div class="relative w-64 h-64 mx-auto mb-5">
+          <div id="finalMediaContainer" class="relative w-full h-full rounded-3xl bg-slate-50 border border-slate-200 shadow-sm overflow-hidden flex items-center justify-center p-2">
+            <img id="finalStickerImg" src="" alt="Performance Meme" class="w-full h-full object-contain rounded-2xl">
+            <video id="finalStickerVideo" class="w-full h-full object-contain rounded-2xl hidden" autoplay loop muted playsinline></video>
+          </div>
+        </div>
+
+        <!-- Accuracy & Streak Mini Stats -->
+        <div class="grid grid-cols-3 gap-2 mb-5 text-center">
+          <div class="bg-blue-50/70 p-2.5 rounded-2xl border border-blue-100">
+            <span class="block text-xs font-bold text-slate-400 uppercase">Accuracy</span>
+            <span id="finalAccuracy" class="text-sm font-black text-blue-900 font-mono">100%</span>
+          </div>
+          <div class="bg-purple-50/70 p-2.5 rounded-2xl border border-purple-100">
+            <span class="block text-xs font-bold text-slate-400 uppercase">Correct</span>
+            <span id="finalCorrectCount" class="text-sm font-black text-purple-900 font-mono">10/10</span>
+          </div>
+          <div class="bg-rose-50/70 p-2.5 rounded-2xl border border-rose-100">
+            <span class="block text-xs font-bold text-slate-400 uppercase">Streak</span>
+            <span id="finalMaxStreak" class="text-sm font-black text-rose-900 font-mono">10 🔥</span>
+          </div>
+        </div>
+
+        <!-- Database Save Status Notification -->
+        <div id="finalDbSaveBanner" class="mb-5 p-2.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i>
+          <span>Score saved to PostgreSQL!</span>
+        </div>
+
+        <!-- Cute Mascot at the bottom matching Screen 4 (Ginger cat with graduation cap saying "You're awesome!") -->
+        <div class="flex items-center justify-center gap-3 mb-6 p-3 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+          <span class="text-4xl">🐱‍🎓</span>
+          <div class="bg-white px-3 py-1.5 rounded-xl shadow-sm text-xs font-black text-slate-800 border border-slate-100">
+            You're awesome! ❤️
+          </div>
+        </div>
+
+        <!-- Action Buttons matching Screen 4: "Continue ->" and "Back to Home" -->
+        <div class="space-y-3">
+          <button id="btnReplayQuiz" class="btn-royal w-full py-4 rounded-2xl font-extrabold text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md">
+            <span>Continue</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+          
+          <button id="btnChooseOtherThemes" class="btn-secondary w-full py-3.5 rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+            <span>Back to Home</span>
+          </button>
+        </div>
+
+      </div>
+    </section>

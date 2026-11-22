@@ -1,0 +1,294 @@
+    <section id="dashboardSection" class="py-2 hidden">
+      
+      <!-- User Greeting Header (Refined EdTech SaaS Header) -->
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-700 border border-blue-200/50 shadow-md shadow-blue-500/20 flex items-center justify-center text-white text-xl">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black font-display text-slate-900">
+              Hello, <span id="dashGreetingName">Ilyas</span>
+            </h2>
+            <p class="text-xs font-medium text-slate-500">Keep going! You're making real progress today.</p>
+          </div>
+        </div>
+
+        <!-- Notification Bell & Interactive Dropdown Flyout -->
+        <div class="relative" id="notifContainer">
+          <button id="btnNotificationBell" class="w-10 h-10 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/80 shadow-2xs flex items-center justify-center text-slate-600 hover:text-blue-700 cursor-pointer transition-all relative" title="Notifications">
+            <i class="fa-regular fa-bell text-sm"></i>
+            <span id="notifBadge" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white animate-pulse"></span>
+          </button>
+
+          <!-- Notification Dropdown -->
+          <div id="notifDropdown" class="absolute right-0 top-12 w-80 sm:w-96 bg-white rounded-2xl border border-slate-200 shadow-xl z-50 p-4 hidden modal-enter">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black uppercase tracking-wider text-slate-800">Notifications</span>
+                <span id="notifCountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">2 New</span>
+              </div>
+              <button id="btnMarkAllNotifs" class="text-[11px] font-semibold text-blue-600 hover:text-blue-800 cursor-pointer hover:underline">
+                Mark all read
+              </button>
+            </div>
+
+            <!-- Notification Items List -->
+            <div id="notifList" class="space-y-2.5 max-h-72 overflow-y-auto custom-scrollbar pr-1">
+              <!-- Item 1: Daily Reminder -->
+              <div class="notif-item p-3 rounded-xl bg-blue-50/50 hover:bg-blue-50 border border-blue-100/80 flex items-start gap-3 transition-colors cursor-pointer" data-id="1">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5 shadow-2xs">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between mb-0.5">
+                    <h5 class="text-xs font-bold text-slate-900 truncate">Daily English Workout</h5>
+                    <span class="text-[10px] font-medium text-slate-400">Just now</span>
+                  </div>
+                  <p class="text-xs text-slate-600 leading-snug">Practice 5 minutes of grammar to keep your learning streak active!</p>
+                </div>
+              </div>
+
+              <!-- Item 2: New Achievement -->
+              <div class="notif-item p-3 rounded-xl bg-blue-50/50 hover:bg-blue-50 border border-blue-100/80 flex items-start gap-3 transition-colors cursor-pointer" data-id="2">
+                <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5 shadow-2xs">
+                  <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between mb-0.5">
+                    <h5 class="text-xs font-bold text-slate-900 truncate">Leaderboard Ready</h5>
+                    <span class="text-[10px] font-medium text-slate-400">2h ago</span>
+                  </div>
+                  <p class="text-xs text-slate-600 leading-snug">You are ranking up! Challenge other learners on the global rankings.</p>
+                </div>
+              </div>
+
+              <!-- Item 3: Speaking Lab -->
+              <div class="notif-item p-3 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 flex items-start gap-3 transition-colors cursor-pointer" data-id="3">
+                <div class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5 shadow-2xs">
+                  <i class="fa-solid fa-microphone-lines"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between mb-0.5">
+                    <h5 class="text-xs font-bold text-slate-900 truncate">Speaking Lab</h5>
+                    <span class="text-[10px] font-medium text-slate-400">1d ago</span>
+                  </div>
+                  <p class="text-xs text-slate-600 leading-snug">Try the new native Text-to-Speech pronunciation trainer in Quick Access.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer of dropdown -->
+            <div class="pt-3 border-t border-slate-100 mt-3 text-center">
+              <span class="text-[11px] font-medium text-slate-400">All notifications up to date</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modern Dynamic Progress Hero Card -->
+      <div class="rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-blue-950 p-6 sm:p-7 text-white shadow-xl border border-slate-800 relative overflow-hidden mb-6">
+        <!-- Ambient Radial Glows -->
+        <div class="absolute -top-20 -right-20 w-56 h-56 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-20 -left-20 w-56 h-56 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          
+          <!-- Left: Dynamic Progress Metrics -->
+          <div class="flex-1 max-w-lg">
+            <div class="flex items-center gap-2 mb-2 flex-wrap">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/20 border border-blue-400/30 text-blue-300 text-[11px] font-extrabold uppercase tracking-wider">
+                <i class="fa-solid fa-chart-line text-blue-400"></i>
+                <span>Your Progress</span>
+              </span>
+              <span id="dashUserRank" class="text-[11px] font-bold text-amber-300 bg-amber-500/15 border border-amber-400/30 px-2.5 py-1 rounded-lg flex items-center gap-1">
+                <i class="fa-solid fa-medal text-amber-400 text-[10px]"></i> Novice Explorer
+              </span>
+            </div>
+
+            <div class="text-3xl sm:text-4xl font-black font-display mt-1 mb-2.5 text-white flex items-baseline gap-2">
+              <span id="dashProgressPercent" class="tracking-tight text-white font-mono">0%</span>
+              <span class="text-xs sm:text-sm font-semibold text-slate-300">completed</span>
+            </div>
+            
+            <!-- Dynamic Neon Progress Bar with Smooth Transition -->
+            <div class="w-full h-3 bg-slate-950/80 border border-white/10 rounded-full overflow-hidden p-0.5 backdrop-blur-sm mb-3.5">
+              <div id="dashProgressBar" class="h-full bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 rounded-full transition-all duration-700 ease-out shadow-[0_0_12px_rgba(52,211,153,0.4)]" style="width: 0%;"></div>
+            </div>
+
+            <!-- Detailed Stats Row -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl text-slate-200">
+                <i class="fa-solid fa-bolt text-amber-400"></i>
+                <span class="text-slate-400 font-medium">Total XP:</span>
+                <span class="font-extrabold text-white font-mono" id="dashTotalScore">0</span>
+              </div>
+              <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl text-slate-200">
+                <i class="fa-solid fa-graduation-cap text-blue-400"></i>
+                <span class="text-slate-400 font-medium">Mastered:</span>
+                <span class="font-extrabold text-white" id="dashCompletedThemes">0/12 Themes</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Milestone Glass Card -->
+          <div class="flex items-center gap-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-4 backdrop-blur-md self-start md:self-center min-w-[210px] transition-all">
+            <div class="w-13 h-13 rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-300 to-yellow-200 flex items-center justify-center text-2xl shadow-lg shadow-amber-500/25 flex-shrink-0 text-amber-950">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div>
+              <span class="text-[10px] font-extrabold text-amber-300 uppercase tracking-wider block">Next Milestone</span>
+              <span id="dashMilestoneText" class="text-sm font-black text-white block mt-0.5">100 XP</span>
+              <span class="text-[10px] font-medium text-slate-400 block">Complete quizzes to level up!</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Quick Access (4 Interactive Cards with Professional Icons) -->
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-bolt text-blue-700"></i>
+            <span>Quick Access</span>
+          </h3>
+          <button id="btnSeeAllLessons" class="text-xs font-bold text-blue-700 hover:text-blue-900 cursor-pointer hover:underline flex items-center gap-1">
+            <span>See all</span>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2.5 sm:gap-4">
+          <!-- Lessons -->
+          <div id="btnQuickLessons" class="app-card rounded-2xl p-3 sm:p-4 text-center cursor-pointer hover:-translate-y-1 transition-all group hover:border-blue-300 hover:shadow-card" title="Browse Grammar Lessons">
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition-transform shadow-sm">
+              <i class="fa-solid fa-book-open-reader text-blue-600 text-lg sm:text-xl"></i>
+            </div>
+            <span class="text-[11px] sm:text-xs font-bold text-slate-800 block">Lessons</span>
+          </div>
+
+          <!-- Quizzes -->
+          <div id="btnQuickQuizzes" class="app-card rounded-2xl p-3 sm:p-4 text-center cursor-pointer hover:-translate-y-1 transition-all group hover:border-rose-300 hover:shadow-card" title="Start Random Quiz Challenge">
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition-transform shadow-sm">
+              <i class="fa-solid fa-gamepad text-rose-600 text-lg sm:text-xl"></i>
+            </div>
+            <span class="text-[11px] sm:text-xs font-bold text-slate-800 block">Quizzes</span>
+          </div>
+
+          <!-- Speaking -->
+          <div id="btnQuickSpeaking" class="app-card rounded-2xl p-3 sm:p-4 text-center cursor-pointer hover:-translate-y-1 transition-all group hover:border-purple-300 hover:shadow-card" title="Practice English Pronunciation">
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition-transform shadow-sm">
+              <i class="fa-solid fa-microphone-lines text-purple-600 text-lg sm:text-xl"></i>
+            </div>
+            <span class="text-[11px] sm:text-xs font-bold text-slate-800 block">Speaking</span>
+          </div>
+
+          <!-- Vocabulary -->
+          <div id="btnQuickVocabulary" class="app-card rounded-2xl p-3 sm:p-4 text-center cursor-pointer hover:-translate-y-1 transition-all group hover:border-amber-300 hover:shadow-card" title="Flashcards & Vocabulary Bank">
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl mx-auto mb-2 group-hover:scale-110 transition-transform shadow-sm">
+              <i class="fa-solid fa-spell-check text-amber-600 text-lg sm:text-xl"></i>
+            </div>
+            <span class="text-[11px] sm:text-xs font-bold text-slate-800 block">Vocabulary</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's Goal Card (Matching Screen 2 card) -->
+      <div id="btnTodayGoalCard" class="app-card rounded-2xl p-4 mb-6 flex items-center justify-between gap-3 bg-gradient-to-r from-blue-50/60 to-white hover:border-blue-300 transition-all cursor-pointer">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl flex-shrink-0 shadow-sm">
+            <i class="fa-solid fa-bullseye text-rose-600"></i>
+          </div>
+          <div>
+            <h4 class="text-xs font-extrabold text-slate-900 uppercase">Today's Goal</h4>
+            <p class="text-xs font-semibold text-slate-600">Learn 10 new words & grammar rules</p>
+          </div>
+        </div>
+        <div class="w-9 h-9 rounded-full bg-blue-700 text-white flex items-center justify-center text-xs flex-shrink-0 shadow-sm hover:bg-blue-800">
+          <i class="fa-solid fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- CEFR Level Selector Tabs (Professional Cambridge / EdTech Style) -->
+      <div class="app-card rounded-2xl p-4 sm:p-5 mb-6">
+        <div class="flex items-center justify-between mb-3.5 flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs">
+              <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <h3 class="text-xs font-black uppercase tracking-wider text-slate-800">
+              Select English Level (CEFR) &amp; Misc
+            </h3>
+          </div>
+          <span id="levelCounterBadge" class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-lg border border-slate-200/80">
+            12 Themes Available
+          </span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2" id="levelFilterContainer">
+          <button class="level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-blue-600 text-white shadow-md shadow-blue-500/25 border border-blue-600 cursor-pointer flex items-center gap-2" data-level="ALL">
+            <span class="level-dot w-2 h-2 rounded-full bg-white"></span>
+            <span>All Levels</span>
+          </button>
+          <button class="level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs" data-level="A1">
+            <span class="level-dot w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span class="font-extrabold">A1</span>
+            <span class="level-sub text-[11px] font-semibold text-slate-500 capitalize">Beginner</span>
+          </button>
+          <button class="level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs" data-level="A2">
+            <span class="level-dot w-2 h-2 rounded-full bg-amber-500"></span>
+            <span class="font-extrabold">A2</span>
+            <span class="level-sub text-[11px] font-semibold text-slate-500 capitalize">Elementary</span>
+          </button>
+          <button class="level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs" data-level="B1">
+            <span class="level-dot w-2 h-2 rounded-full bg-orange-500"></span>
+            <span class="font-extrabold">B1</span>
+            <span class="level-sub text-[11px] font-semibold text-slate-500 capitalize">Intermediate</span>
+          </button>
+          <button class="level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs" data-level="B2">
+            <span class="level-dot w-2 h-2 rounded-full bg-purple-500"></span>
+            <span class="font-extrabold">B2</span>
+            <span class="level-sub text-[11px] font-semibold text-slate-500 capitalize">Upper-Int</span>
+          </button>
+          <button class="level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs" data-level="C1">
+            <span class="level-dot w-2 h-2 rounded-full bg-rose-500"></span>
+            <span class="font-extrabold">C1</span>
+            <span class="level-sub text-[11px] font-semibold text-slate-500 capitalize">Advanced</span>
+          </button>
+
+          <span class="mx-1 h-6 w-px bg-slate-200" title="Not a CEFR level"></span>
+
+          <!-- Playful extras: Gen-Z slang, memes, silly idioms & pop culture -->
+          <button class="level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200/90 hover:border-fuchsia-300 cursor-pointer flex items-center gap-2 shadow-2xs" data-level="MISC">
+            <span class="level-dot w-2 h-2 rounded-full bg-fuchsia-500"></span>
+            <span class="font-extrabold">MISC</span>
+            <span class="level-sub text-[11px] font-semibold text-slate-500 capitalize">Silly stuff 🤪</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Themes / Popular Lessons List (Matching Screen 2 list) -->
+      <div>
+        <div class="flex items-center justify-between mb-3.5 flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xs">
+              <i class="fa-solid fa-fire"></i>
+            </div>
+            <h3 class="text-xs font-black uppercase tracking-wider text-slate-800">
+              Popular Lessons & Quizzes
+            </h3>
+          </div>
+          <button id="btnSeeAllThemes" class="text-xs font-bold text-blue-700 hover:text-blue-900 cursor-pointer hover:underline flex items-center gap-1">
+            <span>Show all (12)</span>
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </button>
+        </div>
+
+        <!-- Dynamic Themes Grid -->
+        <div id="themesGrid" class="space-y-3.5">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+
+    </section>
