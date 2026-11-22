@@ -21,11 +21,12 @@ async function updateSchemaAndData() {
   await pool.query(`UPDATE themes SET level = 'B1' WHERE id = 1`); // English Tenses
   await pool.query(`UPDATE themes SET level = 'B2' WHERE id = 2`); // Grammar, Modals & Conditionals
   await pool.query(`UPDATE themes SET level = 'A2' WHERE id = 3`); // Irregular Verbs Bootcamp
-  await pool.query(`UPDATE themes SET level = 'A2' WHERE id = 4`); // Cats & Dogs Animal Idioms
-  await pool.query(`UPDATE themes SET level = 'B1' WHERE id = 5`); // Internet Slang & Gen-Z (Sabiri & Jamal Alpha)
+  // MISC is not a CEFR level: playful/silly themes live in their own category.
+  await pool.query(`UPDATE themes SET level = 'MISC' WHERE id = 4`); // Cats & Dogs Animal Idioms (silly memes)
+  await pool.query(`UPDATE themes SET level = 'MISC' WHERE id = 5`); // Internet Slang & Gen-Z (Sabiri & Jamal Alpha)
   await pool.query(`UPDATE themes SET level = 'B2' WHERE id = 6`); // Tricky Idioms & False Friends
   await pool.query(`UPDATE themes SET level = 'A1' WHERE id = 7`); // Everyday English & Street Banter
-  await pool.query(`UPDATE themes SET level = 'B1' WHERE id = 8`); // Cinema, Netflix & Pop Culture Quotes
+  await pool.query(`UPDATE themes SET level = 'MISC' WHERE id = 8`); // Cinema, Netflix & Pop Culture Quotes
 
   // 3. Insert new themes for A1, B2, and C1 to ensure every level has comprehensive lessons!
 

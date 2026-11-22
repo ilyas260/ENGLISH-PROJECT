@@ -33,6 +33,8 @@
 ## 🚀 Fonctionnalités Principales
 
 ### 1. 🔐 Authentification & Profils
+- **Page dédiée `login.html`** : inscription / connexion / mode invité. Aucun profil, score, classement ni bouton de déconnexion n'est affiché pendant l'authentification.
+- La barre supérieure de l'application suit automatiquement le compte connecté (nom + points) ; une session absente renvoie vers `login.html`.
 - Connexion sécurisée avec mot de passe haché (`bcryptjs`).
 - Inscription rapide avec validation en direct et bouton d'affichage/masquage du mot de passe (👁️).
 - Mode **"Continue as Guest"** en 1 clic pour tester l'application sans créer de compte.
@@ -45,6 +47,7 @@
   - **B1 Intermédiaire** (Slang Gen-Z, vocabulaire usuel)
   - **B2 Avancé** (Idiomes animaliers, faux-amis)
   - **C1 Expert** (Grammaire avancée, nuances professionnelles)
+  - **MISC — Silly Stuff 🤪** (Slang Gen-Z, mèmes, idioms animaliers, culture pop — ce n'est PAS un niveau CECRL)
 - Barre de progression dynamique calculée en temps réel selon les thèmes complétés.
 
 ### 3. 🎯 3 Formats d'Exercices Interactifs
@@ -78,14 +81,28 @@
 
 ```text
 project-english/
-├── index.html               # Application Single-Page (SPA) complète et responsive
-├── app.js                   # Moteur Frontend (logique de quiz, audio, animations, auth)
+├── index.html               # Coquille modulaire de l'application (partials injectés)
+├── login.html               # Page d'authentification dédiée (sign in / sign up / guest)
+├── styles.css               # Feuille de style partagée (extraite de l'ancien index.html)
 ├── server.js                # Serveur API REST Express + connexion PostgreSQL
 ├── schema.sql               # Schéma SQL de la base de données (tables, thèmes, questions)
 ├── package.json             # Configuration du projet Node.js et dépendances
 ├── .env.example             # Modèle des variables d'environnement de configuration
 ├── .gitignore               # Fichiers exclus du versionnement Git (node_modules, .env)
 ├── README.md                # Documentation professionnelle du projet
+│
+├── js/                      # Scripts frontend modulaires
+│   ├── loader.js            # Charge les partials HTML puis démarre l'application
+│   ├── login.js             # Logique de login.html (auth + redirection)
+│   ├── app.js               # Moteur de quiz / audio / progression (session uniquement)
+│   └── tailwind-config.js   # Configuration Tailwind partagée
+│
+├── partials/                # Vues HTML modulaires injectées dans index.html
+│   ├── header.html          # Barre supérieure (contrôles visibles si connecté)
+│   ├── dashboard.html       # Tableau de bord + filtres CEFR / MISC
+│   ├── quiz.html            # Arène de quiz
+│   ├── results.html         # Écran de résultats
+│   └── modals.html          # Modales (une seule copie chacune)
 │
 ├── assets/                  # Ressources visuelles et multimédias
 │   ├── mascot_hero.jpg      # Illustration mascotte 3D (haute qualité, sans statut)
@@ -147,7 +164,7 @@ psql -U postgres -d baamboozle_english -f schema.sql
 ```bash
 node server.js
 ```
-👉 Ouvrez ensuite votre navigateur sur : **`http://localhost:3000`**
+👉 Ouvrez ensuite votre navigateur sur : **`http://localhost:3000`** (redirection automatique vers `login.html` si aucune session n'existe).
 
 ---
 
