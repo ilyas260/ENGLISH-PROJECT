@@ -35,7 +35,8 @@
         if (target) target.innerHTML = markup;
       });
 
-      // app.js is loaded last: all of its DOM references now exist.
+      // i18n and app.js loaded in sequence: DOM references now exist.
+      await loadScript('js/i18n.js');
       await loadScript('js/app.js');
     } catch (error) {
       console.error('Modular loader error:', error);

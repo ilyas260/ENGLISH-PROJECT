@@ -694,10 +694,28 @@ function updateDashboardProgress() {
     DOM.dashProgressBar.style.width = `${percent}%`;
   }
   if (DOM.dashTotalScore) {
-    DOM.dashTotalScore.textContent = score;
+    DOM.dashTotalScore.textContent = `${score} XP`;
   }
 
-  // Completed themes counter
+  // Update SVG Circular Progress Ring (Circumference ~ 251.32)
+  const circleEl = document.getElementById('dashProgressCircle');
+  if (circleEl) {
+    const circumference = 251.32;
+    const offset = circumference - (percent / 100) * circumference;
+    circleEl.style.strokeDashoffset = offset;
+  }
+
+  // Completed themes counters and labels matching reference image
+  const masteredEl = document.getElementById('dashMasteredText');
+  if (masteredEl) {
+    masteredEl.textContent = `${completedCount} thème${completedCount > 1 ? 's' : ''} maîtrisé${completedCount > 1 ? 's' : ''} sur ${totalThemes}`;
+  }
+
+  const nextRankSub = document.getElementById('dashNextRankSub');
+  if (nextRankSub) {
+    nextRankSub.textContent = `${completedCount} / ${totalThemes} thèmes maîtrisés`;
+  }
+
   const completedEl = document.getElementById('dashCompletedThemes');
   if (completedEl) {
     completedEl.textContent = `${completedCount}/${totalThemes} Themes`;
@@ -708,23 +726,30 @@ function updateDashboardProgress() {
   const milestoneEl = document.getElementById('dashMilestoneText');
   let rank = '<i class="fa-solid fa-seedling text-emerald-400 text-[10px]"></i> Novice Explorer';
   let nextMilestone = '100 XP';
+  let nextRankTitle = 'English Champion';
 
   if (score >= 1000 || percent >= 100) {
     rank = '<i class="fa-solid fa-crown text-amber-400 text-[10px]"></i> English Champion';
     nextMilestone = 'Max Mastered! 🎉';
+    nextRankTitle = 'Grand Master';
   } else if (score >= 600 || percent >= 75) {
     rank = '<i class="fa-solid fa-award text-yellow-400 text-[10px]"></i> Grammar Master';
     nextMilestone = '1,000 XP';
+    nextRankTitle = 'English Champion';
   } else if (score >= 300 || percent >= 45) {
     rank = '<i class="fa-solid fa-star text-blue-400 text-[10px]"></i> Skilled Speaker';
     nextMilestone = '600 XP';
+    nextRankTitle = 'Grammar Master';
   } else if (score >= 100 || percent >= 20) {
     rank = '<i class="fa-solid fa-medal text-amber-400 text-[10px]"></i> Active Learner';
     nextMilestone = '300 XP';
+    nextRankTitle = 'Skilled Speaker';
   }
 
   if (rankEl) rankEl.innerHTML = rank;
   if (milestoneEl) milestoneEl.textContent = nextMilestone;
+  const nextRankTitleEl = document.getElementById('dashNextRankTitle');
+  if (nextRankTitleEl) nextRankTitleEl.textContent = nextRankTitle;
 }
 
 function updateHeaderUser() {
@@ -738,8 +763,8 @@ function updateHeaderUser() {
   if (controls) controls.classList.toggle('hidden', !user);
 
   if (DOM.currentUserName) DOM.currentUserName.textContent = name;
-  if (DOM.currentUserScore) DOM.currentUserScore.textContent = `${score} pts`;
-  if (DOM.dashTotalScore) DOM.dashTotalScore.textContent = score;
+  if (DOM.currentUserScore) DOM.currentUserScore.textContent = `${score.toLocaleString()} XP`;
+  if (DOM.dashTotalScore) DOM.dashTotalScore.textContent = `${score.toLocaleString()} XP`;
   if (DOM.dashGreetingName) DOM.dashGreetingName.textContent = name;
 
   updateDashboardProgress();
@@ -906,60 +931,30 @@ function setLevelFilter(level) {
   state.currentLevelFilter = level;
   const buttons = document.querySelectorAll('.level-tab-btn');
 
-  const levelStyles = {
-    ALL: {
-      active: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-blue-600 text-white shadow-md shadow-blue-500/25 border border-blue-600 cursor-pointer flex items-center gap-2',
-      inactive: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs',
-      dotColor: 'bg-white'
-    },
-    A1: {
-      active: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-emerald-600 text-white shadow-md shadow-emerald-500/25 border border-emerald-600 cursor-pointer flex items-center gap-2',
-      inactive: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs',
-      dotColor: 'bg-emerald-500'
-    },
-    A2: {
-      active: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-amber-600 text-white shadow-md shadow-amber-500/25 border border-amber-600 cursor-pointer flex items-center gap-2',
-      inactive: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs',
-      dotColor: 'bg-amber-500'
-    },
-    B1: {
-      active: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-orange-600 text-white shadow-md shadow-orange-500/25 border border-orange-600 cursor-pointer flex items-center gap-2',
-      inactive: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs',
-      dotColor: 'bg-orange-500'
-    },
-    B2: {
-      active: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-purple-600 text-white shadow-md shadow-purple-500/25 border border-purple-600 cursor-pointer flex items-center gap-2',
-      inactive: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs',
-      dotColor: 'bg-purple-500'
-    },
-    C1: {
-      active: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-rose-600 text-white shadow-md shadow-rose-500/25 border border-rose-600 cursor-pointer flex items-center gap-2',
-      inactive: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 hover:border-slate-300 cursor-pointer flex items-center gap-2 shadow-2xs',
-      dotColor: 'bg-rose-500'
-    },
-    MISC: {
-      active: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-fuchsia-600 text-white shadow-md shadow-fuchsia-500/25 border border-fuchsia-600 cursor-pointer flex items-center gap-2',
-      inactive: 'level-tab-btn px-3.5 py-2 rounded-xl font-bold text-xs uppercase transition-all bg-white hover:bg-fuchsia-50 text-fuchsia-700 border border-fuchsia-200/90 hover:border-fuchsia-300 cursor-pointer flex items-center gap-2 shadow-2xs',
-      dotColor: 'bg-fuchsia-500'
-    }
-  };
-
   buttons.forEach(btn => {
     const btnLvl = btn.getAttribute('data-level');
-    const cfg = levelStyles[btnLvl] || levelStyles.ALL;
-    const dot = btn.querySelector('.level-dot');
-    const labelSpan = btn.querySelector('.level-sub');
-
     if (btnLvl === level) {
-      btn.className = cfg.active;
-      if (dot) dot.className = 'level-dot w-2 h-2 rounded-full bg-white';
-      if (labelSpan) labelSpan.className = 'level-sub text-[11px] font-semibold text-white/90 capitalize';
+      btn.className = 'level-tab-btn px-3.5 py-1.5 rounded-full font-extrabold text-xs transition-all bg-indigo-50 text-indigo-700 border border-indigo-200 cursor-pointer shadow-xs';
     } else {
-      btn.className = cfg.inactive;
-      if (dot) dot.className = `level-dot w-2 h-2 rounded-full ${cfg.dotColor}`;
-      if (labelSpan) labelSpan.className = 'level-sub text-[11px] font-semibold text-slate-500 capitalize';
+      btn.className = 'level-tab-btn px-3 py-1.5 rounded-full font-bold text-xs transition-all bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 cursor-pointer';
     }
   });
+
+  const levelBadge = document.getElementById('dashLevelBadge');
+  if (levelBadge) {
+    if (level === 'ALL') {
+      levelBadge.textContent = 'TOUS NIVEAUX';
+    } else if (level === 'A1') {
+      levelBadge.textContent = 'A1 • DÉBUTANT';
+    } else if (level === 'A2') {
+      levelBadge.textContent = 'A2 • ÉLÉMENTAIRE';
+    } else if (level === 'B1') {
+      levelBadge.textContent = 'B1 • INTERMÉDIAIRE';
+    } else if (level === 'B2') {
+      levelBadge.textContent = 'B2 ET +';
+    }
+  }
+
   renderDashboard();
 }
 
@@ -1009,10 +1004,19 @@ function renderDashboard() {
 
 function getThemeVisuals(theme) {
   const title = (theme.title || '').toLowerCase();
-  let iconName = theme.icon || 'fa-graduation-cap';
-  let color = theme.color_theme || 'blue';
+  let iconName = theme.icon || 'fa-book-open';
+  let color = theme.color_theme || 'indigo';
 
-  if (title.includes('cat') || title.includes('dog') || title.includes('animal')) {
+  if (title.includes('everyday') || title.includes('conversation') || title.includes('dialogue') || title.includes('présenter')) {
+    iconName = 'fa-book-open';
+    color = 'indigo';
+  } else if (title.includes('café') || title.includes('cafe') || title.includes('coffee') || title.includes('oral') || title.includes('compréhension') || title.includes('listen')) {
+    iconName = 'fa-headphones';
+    color = 'emerald';
+  } else if (title.includes('routine') || title.includes('habitudes') || title.includes('daily') || title.includes('gramm')) {
+    iconName = 'fa-clipboard-list';
+    color = 'amber';
+  } else if (title.includes('cat') || title.includes('dog') || title.includes('animal')) {
     iconName = 'fa-paw';
     color = 'amber';
   } else if (title.includes('irregular') || title.includes('verb')) {
@@ -1039,81 +1043,89 @@ function getThemeVisuals(theme) {
   }
 
   const palette = {
-    amber: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200/80', shadow: 'shadow-amber-500/10' },
-    emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200/80', shadow: 'shadow-emerald-500/10' },
-    indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200/80', shadow: 'shadow-indigo-500/10' },
-    blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200/80', shadow: 'shadow-blue-500/10' },
-    purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200/80', shadow: 'shadow-purple-500/10' },
-    rose: { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200/80', shadow: 'shadow-rose-500/10' },
-    orange: { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200/80', shadow: 'shadow-orange-500/10' },
-    cyan: { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-200/80', shadow: 'shadow-cyan-500/10' },
+    amber: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-100' },
+    emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100' },
+    indigo: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-100' },
+    blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100' },
+    purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-100' },
+    rose: { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-100' },
+    orange: { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-100' },
+    cyan: { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-100' },
   };
 
-  const scheme = palette[color] || palette.blue;
+  const scheme = palette[color] || palette.indigo;
   return {
-    iconHtml: `<i class="fa-solid ${iconName} ${scheme.text} text-xl sm:text-2xl"></i>`,
-    containerClasses: `${scheme.bg} ${scheme.border} ${scheme.shadow}`
+    iconHtml: `<i class="fa-solid ${iconName} ${scheme.text} text-base sm:text-lg"></i>`,
+    containerClasses: `${scheme.bg} ${scheme.border}`
   };
 }
 
-  filteredThemes.forEach((theme) => {
-    const lvl = withNormalizedLevel(theme).level;
-    const lvlInfo = levelStyles[lvl] || levelStyles.MISC;
+  filteredThemes.forEach((theme, idx) => {
     const isCompleted = completedList.includes(theme.id);
     const vis = getThemeVisuals(theme);
+    const totalCount = filteredThemes.length;
+    const lessonNum = (idx % totalCount) + 1;
+    const duration = 8 + (idx % 3) * 2;
+    const topicSub = theme.description || 'Se présenter et faire connaissance';
 
     const card = document.createElement('div');
-    card.className = `app-card rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border border-slate-200/80 hover:border-blue-400/80 hover:shadow-card hover:-translate-y-0.5 transition-all duration-200 group bg-white`;
+    card.className = 'bg-white rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-4 border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all duration-200 group';
 
     card.innerHTML = `
-      <div class="flex items-start sm:items-center gap-4">
-        <!-- Modern Theme Icon Squircle -->
-        <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl ${vis.containerClasses} border flex items-center justify-center shadow-xs flex-shrink-0 group-hover:scale-105 transition-transform">
+      <div class="flex items-center gap-3.5 sm:gap-4 flex-1 min-w-0">
+        <!-- Squircle Icon matching reference image -->
+        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl ${vis.containerClasses} border flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
           ${vis.iconHtml}
         </div>
 
         <!-- Theme Details -->
         <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span class="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase flex items-center gap-1.5 ${lvlInfo.badge}">
-              <span class="w-1.5 h-1.5 rounded-full ${lvlInfo.dot}"></span>
-              ${lvlInfo.label}
-            </span>
-            ${isCompleted ? `
-              <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center gap-1">
-                <i class="fa-solid fa-circle-check text-emerald-500"></i> Done
-              </span>
-            ` : ''}
-            <span class="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
-              <i class="fa-regular fa-clock text-slate-400 text-[10px]"></i> 15 min
-            </span>
-            <span class="text-slate-300">•</span>
-            <span class="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
-              <i class="fa-solid fa-list-check text-slate-400 text-[10px]"></i> ${theme.exercise_count || 20} Questions
-            </span>
-          </div>
-
-          <h3 class="text-base sm:text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
+          <h4 class="text-sm sm:text-base font-black text-slate-900 group-hover:text-indigo-600 transition-colors truncate">
             ${theme.title}
-          </h3>
-          <p class="text-xs font-medium text-slate-500 line-clamp-1 mt-0.5">
-            ${theme.description || 'Grammar lessons, vocabulary and interactive practice.'}
+          </h4>
+          <p class="text-xs text-slate-400 font-medium truncate mt-0.5">
+            <span>${topicSub}</span>
+            <span class="text-slate-300 mx-1">•</span>
+            <span>${duration} min - ${(typeof t === 'function' ? t('next.lesson') : 'Leçon')} ${lessonNum} / ${totalCount}</span>
           </p>
         </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="flex items-center gap-2.5 flex-shrink-0 self-end md:self-center">
+      <!-- Center-Right Progress / Status (Matching screenshot) -->
+      <div class="hidden sm:flex flex-shrink-0 items-center justify-end pr-2">
+        ${isCompleted ? `
+          <div class="flex flex-col items-start gap-1 w-24 sm:w-28">
+            <span class="text-[10px] font-black uppercase tracking-wider text-indigo-600">${typeof t === 'function' ? t('next.inProgress') : 'EN COURS'}</span>
+            <div class="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-indigo-600 rounded-full" style="width: 45%;"></div>
+            </div>
+          </div>
+        ` : `
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+            ${typeof t === 'function' ? t('next.discover') : 'À DÉCOUVRIR'}
+          </span>
+        `}
+      </div>
+
+      <!-- Action Button (Matching screenshot) -->
+      <div class="flex items-center gap-2 flex-shrink-0">
         ${theme.lesson_content ? `
-          <button class="btn-lesson h-10 px-3.5 rounded-xl text-xs font-bold text-slate-700 hover:text-blue-700 bg-slate-50 hover:bg-blue-50/70 border border-slate-200/90 hover:border-blue-200 flex items-center gap-2 transition-all cursor-pointer shadow-xs" data-theme-id="${theme.id}" title="Read Grammar Lesson">
-            <i class="fa-solid fa-book-open text-blue-600 text-xs"></i>
-            <span>Lesson</span>
+          <button class="btn-lesson h-9 px-3 rounded-xl text-xs font-bold text-slate-500 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50/50 border border-slate-200 hidden md:flex items-center gap-1.5 transition-all cursor-pointer" data-theme-id="${theme.id}" title="Lire la leçon">
+            <i class="fa-solid fa-book-open text-xs"></i>
+            <span class="hidden lg:inline">${typeof t === 'function' ? t('next.lesson') : 'Leçon'}</span>
           </button>
         ` : ''}
-        <button class="btn-start h-10 px-5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-blue-600 hover:from-blue-800 hover:to-indigo-700 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/30 flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-95" data-theme-id="${theme.id}">
-          <span>Practice</span>
-          <i class="fa-solid fa-play text-[10px] text-blue-200"></i>
-        </button>
+        ${isCompleted ? `
+          <button class="btn-start h-9 sm:h-10 px-4 sm:px-5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95" data-theme-id="${theme.id}">
+            <span>${typeof t === 'function' ? t('next.resume') : 'Reprendre'}</span>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+          </button>
+        ` : `
+          <button class="btn-start h-9 sm:h-10 px-4 sm:px-5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs active:scale-95" data-theme-id="${theme.id}">
+            <span>${typeof t === 'function' ? t('next.start') : 'Commencer'}</span>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+          </button>
+        `}
       </div>
     `;
 
@@ -2164,28 +2176,202 @@ DOM.btnGoHome.addEventListener('click', () => {
 });
 
 // ====================================================================
-// 13. LEADERBOARD MODAL
+// 13. LEADERBOARD MODAL (Classement)
 // ====================================================================
-DOM.btnOpenLeaderboard.addEventListener('click', () => {
-  playClickSound();
-  loadAndDisplayLeaderboard();
-  DOM.leaderboardModal.classList.remove('hidden');
-});
+function updateNavTabs(active) {
+  const tabDash = document.getElementById('navTabDashboard');
+  const tabLess = document.getElementById('navTabLessons');
+  const tabLead = document.getElementById('navTabLeaderboard');
 
-DOM.btnCloseLeaderboard.addEventListener('click', () => {
-  playClickSound();
-  DOM.leaderboardModal.classList.add('hidden');
-});
+  const activeClass = 'bg-white text-indigo-600 font-bold text-xs sm:text-sm px-4 sm:px-5 py-2 rounded-xl shadow-xs transition-all cursor-pointer';
+  const inactiveClass = 'text-slate-500 hover:text-slate-900 font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 rounded-xl hover:bg-white/50 transition-all cursor-pointer';
 
-DOM.btnRefreshLeaderboard.addEventListener('click', () => {
+  if (tabDash) tabDash.className = active === 'dashboard' ? activeClass : inactiveClass;
+  if (tabLess) tabLess.className = active === 'lessons' ? activeClass : inactiveClass;
+  if (tabLead) tabLead.className = active === 'leaderboard' ? activeClass : inactiveClass;
+}
+
+function openLeaderboardModal() {
   playClickSound();
+  updateNavTabs('leaderboard');
   loadAndDisplayLeaderboard();
-});
+  const modal = DOM.leaderboardModal || document.getElementById('leaderboardModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
+}
+
+function closeLeaderboardModal() {
+  playClickSound();
+  updateNavTabs('dashboard');
+  const modal = DOM.leaderboardModal || document.getElementById('leaderboardModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+// Bind leaderboard triggers
+if (DOM.btnOpenLeaderboard) {
+  DOM.btnOpenLeaderboard.addEventListener('click', openLeaderboardModal);
+}
+if (DOM.btnCloseLeaderboard) {
+  DOM.btnCloseLeaderboard.addEventListener('click', closeLeaderboardModal);
+}
+if (DOM.btnRefreshLeaderboard) {
+  DOM.btnRefreshLeaderboard.addEventListener('click', () => {
+    playClickSound();
+    const icon = DOM.btnRefreshLeaderboard.querySelector('i');
+    if (icon) icon.classList.add('fa-spin');
+    loadAndDisplayLeaderboard().finally(() => {
+      setTimeout(() => {
+        if (icon) icon.classList.remove('fa-spin');
+      }, 500);
+    });
+  });
+}
+
+// Close modal when clicking outside the card
+const lbModalEl = DOM.leaderboardModal || document.getElementById('leaderboardModal');
+if (lbModalEl) {
+  lbModalEl.addEventListener('click', (e) => {
+    if (e.target === lbModalEl) {
+      closeLeaderboardModal();
+    }
+  });
+}
+
+// Wire header profile pill and score pill
+const profilePill = document.getElementById('userProfilePill');
+if (profilePill) {
+  profilePill.addEventListener('click', () => {
+    playClickSound();
+    if (DOM.settingsModal) {
+      DOM.settingsModal.classList.remove('hidden');
+    }
+  });
+}
+
+const headerScorePill = document.getElementById('headerScorePill');
+if (headerScorePill) {
+  headerScorePill.addEventListener('click', openLeaderboardModal);
+}
+
+function getLeaderboardAvatar(username) {
+  const name = username || 'Player';
+  const clean = name.replace(/[^a-zA-Z0-9]/g, '');
+  const initials = (clean.length >= 2 ? clean.slice(0, 2) : (clean || 'PL')).toUpperCase();
+
+  const colors = [
+    { bg: 'bg-indigo-600', text: 'text-white' },
+    { bg: 'bg-blue-600', text: 'text-white' },
+    { bg: 'bg-emerald-600', text: 'text-white' },
+    { bg: 'bg-slate-700', text: 'text-white' },
+    { bg: 'bg-purple-600', text: 'text-white' },
+    { bg: 'bg-teal-600', text: 'text-white' },
+  ];
+
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash += name.charCodeAt(i);
+  return { initials, ...colors[hash % colors.length] };
+}
+
+function renderLeaderboardItem(entry, idx) {
+  const isCurrent = state.currentUser && (
+    state.currentUser.username === entry.username || 
+    state.currentUser.id === entry.id
+  );
+  const avatar = getLeaderboardAvatar(entry.username);
+  const score = (entry.total_score || 0).toLocaleString();
+
+  // Clean numeric rank badge (no emojis)
+  let rankHtml = '';
+  if (idx === 0) {
+    rankHtml = `
+      <div class="w-7 h-7 rounded-lg bg-amber-500 text-white font-black text-xs flex items-center justify-center shadow-2xs flex-shrink-0" title="1ère place">
+        1
+      </div>
+    `;
+  } else if (idx === 1) {
+    rankHtml = `
+      <div class="w-7 h-7 rounded-lg bg-slate-300 text-slate-800 font-black text-xs flex items-center justify-center shadow-2xs flex-shrink-0" title="2ème place">
+        2
+      </div>
+    `;
+  } else if (idx === 2) {
+    rankHtml = `
+      <div class="w-7 h-7 rounded-lg bg-amber-700 text-white font-black text-xs flex items-center justify-center shadow-2xs flex-shrink-0" title="3ème place">
+        3
+      </div>
+    `;
+  } else {
+    rankHtml = `
+      <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 font-bold text-xs flex items-center justify-center flex-shrink-0">
+        ${idx + 1}
+      </div>
+    `;
+  }
+
+  // Row container styling (clean enterprise look)
+  let containerClasses = 'p-3 rounded-2xl border transition-all duration-150 flex items-center gap-3 ';
+  if (isCurrent) {
+    containerClasses += 'bg-indigo-50/80 border-indigo-200/90 shadow-2xs';
+  } else if (idx === 0) {
+    containerClasses += 'bg-amber-50/40 border-amber-200/80 shadow-2xs';
+  } else {
+    containerClasses += 'bg-white hover:bg-slate-50/80 border-slate-200/80 shadow-2xs';
+  }
+
+  const item = document.createElement('div');
+  item.className = containerClasses;
+
+  item.innerHTML = `
+    <!-- Rank Badge -->
+    ${rankHtml}
+
+    <!-- Avatar with Initials -->
+    <div class="w-9 h-9 rounded-xl ${avatar.bg} text-white font-black text-xs flex items-center justify-center shadow-2xs flex-shrink-0 select-none">
+      ${avatar.initials}
+    </div>
+
+    <!-- Player Details -->
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 mb-0.5">
+        <span class="font-bold text-sm text-slate-900 truncate tracking-tight">
+          ${entry.username}
+        </span>
+        ${isCurrent ? `
+          <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-indigo-600 text-white tracking-wide">
+            VOUS
+          </span>
+        ` : ''}
+        ${idx === 0 ? `
+          <span class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200/70 hidden sm:inline">
+            PREMIER
+          </span>
+        ` : ''}
+      </div>
+      <p class="text-[11px] font-medium text-slate-400 truncate">
+        Niveau A2 • Actif cette semaine
+      </p>
+    </div>
+
+    <!-- XP Badge (Clean typography with vector bolt) -->
+    <div class="px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200/80 text-amber-900 font-mono font-black text-xs flex items-center gap-1.5 shadow-2xs flex-shrink-0">
+      <i class="fa-solid fa-bolt text-amber-500 text-[10px]"></i>
+      <span>${score} XP</span>
+    </div>
+  `;
+
+  return item;
+}
 
 async function loadAndDisplayLeaderboard() {
-  DOM.leaderboardList.innerHTML = `
-    <div class="text-center py-6 text-xs text-slate-400 animate-pulse">
-      <i class="fa-solid fa-spinner fa-spin mr-1.5 text-indigo-400"></i> Fetching rankings from PostgreSQL...
+  const listEl = DOM.leaderboardList || document.getElementById('leaderboardList');
+  if (!listEl) return;
+
+  listEl.innerHTML = `
+    <div class="text-center py-8 text-xs text-slate-400 animate-pulse">
+      <i class="fa-solid fa-spinner fa-spin mr-1.5 text-indigo-500"></i> Chargement des scores en direct...
     </div>
   `;
 
@@ -2193,51 +2379,34 @@ async function loadAndDisplayLeaderboard() {
     const res = await fetch(`${API_BASE}/api/leaderboard`);
     if (res.ok) {
       const list = await res.json();
-      if (list.length === 0) {
-        DOM.leaderboardList.innerHTML = `<div class="text-center py-6 text-xs text-slate-400">No players recorded yet. Be the first!</div>`;
+      if (Array.isArray(list) && list.length > 0) {
+        listEl.innerHTML = '';
+        list.forEach((entry, idx) => {
+          listEl.appendChild(renderLeaderboardItem(entry, idx));
+        });
         return;
       }
-
-      DOM.leaderboardList.innerHTML = '';
-      const medals = ['🥇', '🥈', '🥉'];
-
-      list.forEach((entry, idx) => {
-        const item = document.createElement('div');
-        const medal = medals[idx] || `#${idx + 1}`;
-        item.className = 'flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800 rounded-xl';
-        item.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="font-bold text-base w-8 text-center">${medal}</span>
-            <span class="font-bold text-sm text-white">${entry.username}</span>
-          </div>
-          <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-3 py-0.5 rounded-full font-mono font-bold text-xs">
-            ${entry.total_score} PTS
-          </span>
-        `;
-        DOM.leaderboardList.appendChild(item);
-      });
-      return;
     }
   } catch (err) {
     console.warn('Leaderboard fetch note:', err.message);
   }
 
-  // Fallback demo leaderboard
-  DOM.leaderboardList.innerHTML = `
-    <div class="p-3 bg-slate-800/80 border border-slate-700 rounded-xl mb-3 text-xs text-slate-300">
-      ℹ️ Displaying offline rankings snapshot (PostgreSQL database ready to connect).
-    </div>
-    <div class="space-y-2">
-      <div class="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800 rounded-xl">
-        <div class="flex items-center gap-3"><span class="text-base">🥇</span><span class="font-bold text-sm text-white">MemeMaster</span></div>
-        <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-3 py-0.5 rounded-full font-mono font-bold text-xs">950 PTS</span>
-      </div>
-      <div class="flex items-center justify-between p-3 bg-slate-950/60 border border-slate-800 rounded-xl">
-        <div class="flex items-center gap-3"><span class="text-base">🥈</span><span class="font-bold text-sm text-white">EnglishNinja</span></div>
-        <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-3 py-0.5 rounded-full font-mono font-bold text-xs">700 PTS</span>
-      </div>
-    </div>
-  `;
+  // Fallback demo rankings
+  const currentName = state.currentUser ? (state.currentUser.username || 'MemeMaster') : 'MemeMaster';
+  const currentScore = state.currentUser ? (state.currentUser.total_score || 4950) : 4950;
+
+  const fallbackList = [
+    { username: currentName, total_score: currentScore },
+    { username: 'QuizWizard', total_score: 1800 },
+    { username: 'EnglishNinja', total_score: 950 },
+    { username: 'Sarah_Polyglot', total_score: 520 },
+    { username: 'demo', total_score: 100 }
+  ];
+
+  listEl.innerHTML = '';
+  fallbackList.forEach((entry, idx) => {
+    listEl.appendChild(renderLeaderboardItem(entry, idx));
+  });
 }
 
 // Sound FX toggle
@@ -2323,6 +2492,80 @@ function setupQuickAccessBar() {
 
   const speakingModal = document.getElementById('speakingModal');
   const vocabModal = document.getElementById('vocabModal');
+
+  // Resume Journey Button from Hero Banner
+  const btnResumeJourney = document.getElementById('btnResumeJourney');
+  if (btnResumeJourney) {
+    btnResumeJourney.addEventListener('click', () => {
+      playClickSound();
+      if (state.themes && state.themes.length > 0) {
+        startQuizForTheme(state.themes[0]);
+      }
+    });
+  }
+
+  // Language Switcher Toggle (FR <-> EN)
+  const btnLangToggle = document.getElementById('btnLangToggle');
+  if (btnLangToggle) {
+    btnLangToggle.addEventListener('click', () => {
+      playClickSound();
+      const current = localStorage.getItem('app_lang') || 'fr';
+      const nextLang = current === 'fr' ? 'en' : 'fr';
+      if (typeof setLanguage === 'function') {
+        setLanguage(nextLang);
+      }
+      renderDashboard();
+    });
+  }
+
+  // See All Activities
+  const btnSeeAllActivities = document.getElementById('btnSeeAllActivities');
+  if (btnSeeAllActivities) {
+    btnSeeAllActivities.addEventListener('click', () => {
+      playClickSound();
+      setLevelFilter('ALL');
+      const el = document.getElementById('themesGrid');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  // Learn Next Words Button (from Daily Goal widget)
+  const btnLearnNextWords = document.getElementById('btnLearnNextWords');
+  if (btnLearnNextWords) {
+    btnLearnNextWords.addEventListener('click', () => {
+      playClickSound();
+      updateVocabUI();
+      if (vocabModal) vocabModal.classList.remove('hidden');
+    });
+  }
+
+  // Navigation Tabs in Header
+  const navTabDashboard = document.getElementById('navTabDashboard');
+  const navTabLessons = document.getElementById('navTabLessons');
+  const navTabLeaderboard = document.getElementById('navTabLeaderboard');
+
+  if (navTabDashboard) {
+    navTabDashboard.addEventListener('click', () => {
+      playClickSound();
+      showScreen('dashboard');
+      updateNavTabs('dashboard');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+  if (navTabLessons) {
+    navTabLessons.addEventListener('click', () => {
+      playClickSound();
+      showScreen('dashboard');
+      updateNavTabs('lessons');
+      const el = document.getElementById('themesGrid');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+  if (navTabLeaderboard) {
+    navTabLeaderboard.addEventListener('click', () => {
+      openLeaderboardModal();
+    });
+  }
 
   if (btnLessons) {
     btnLessons.addEventListener('click', () => {
@@ -2546,6 +2789,11 @@ async function initApp() {
   setupQuickAccessBar();
   setupNotifications();
   setupSettingsModal();
+
+  // Apply saved or default language
+  if (typeof setLanguage === 'function') {
+    setLanguage(localStorage.getItem('app_lang') || 'fr');
+  }
 
   // Logout always returns to the dedicated login page
   if (DOM.btnLogout) {
